@@ -265,6 +265,18 @@ void VulkanglTFScene::drawNode(VkCommandBuffer commandBuffer, VkPipelineLayout p
 	for (auto& child : node->children) {
 		drawNode(commandBuffer, pipelineLayout, child);
 	}
+    for (auto& child : node->children) {
+        drawNode(commandBuffer, pipelineLayout, child);
+    }
+    for (auto& child : node->children) {
+        drawNode(commandBuffer, pipelineLayout, child);
+    }
+    for (auto& child : node->children) {
+        drawNode(commandBuffer, pipelineLayout, child);
+    }
+    for (auto& child : node->children) {
+        drawNode(commandBuffer, pipelineLayout, child);
+    }
 }
 
 // Draw the glTF scene starting at the top-level-nodes
@@ -278,6 +290,18 @@ void VulkanglTFScene::draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipel
 	for (auto& node : nodes) {
 		drawNode(commandBuffer, pipelineLayout, node);
 	}
+    for (auto& node : nodes) {
+        drawNode(commandBuffer, pipelineLayout, node);
+    }
+    for (auto& node : nodes) {
+        drawNode(commandBuffer, pipelineLayout, node);
+    }
+    for (auto& node : nodes) {
+        drawNode(commandBuffer, pipelineLayout, node);
+    }
+    for (auto& node : nodes) {
+        drawNode(commandBuffer, pipelineLayout, node);
+    }
 }
 
 /*
@@ -342,6 +366,10 @@ void VulkanExample::buildCommandBuffers()
 
 		// POI: Draw the glTF scene
 		glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
+        glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
+        glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
+        glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
+        glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
 
 		drawUI(drawCmdBuffers[i]);
 		vkCmdEndRenderPass(drawCmdBuffers[i]);
@@ -650,7 +678,7 @@ void VulkanExample::OnUpdateUIOverlay(vks::UIOverlay* overlay)
 		// POI: Create a list of glTF nodes for visibility toggle
 		ImGui::BeginChild("#nodelist", ImVec2(200.0f * overlay->scale, 340.0f * overlay->scale), false);
 		for (auto& node : glTFScene.nodes)
-		{		
+		{
 			if (overlay->checkBox(node->name.c_str(), &node->visible))
 			{
 				buildCommandBuffers();
