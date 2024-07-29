@@ -5,6 +5,7 @@
     <application
         android:label="Vulkan scene rendering"
         android:icon="@drawable/icon"
+        android:appCategory="game"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         <activity android:name="de.saschawillems.vulkanSample.VulkanActivity"
             android:exported="true"
