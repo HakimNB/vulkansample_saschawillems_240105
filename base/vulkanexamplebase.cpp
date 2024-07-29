@@ -284,7 +284,7 @@ void VulkanExampleBase::nextFrame()
 		}
 #endif
 		frameCounter = 0;
-		lastTimestamp = tEnd;
+		lastTimestamp = tEnd; // ADPF: CPU timestamp
 	}
 	tPrevEnd = tEnd;
 
@@ -346,7 +346,7 @@ void VulkanExampleBase::renderLoop()
 
 		focused = true;
 
-		while ((ident = ALooper_pollAll(focused ? 0 : -1, NULL, &events, (void**)&source)) >= 0)
+		while ((ident = ALooper_pollOnce(focused ? 0 : -1, NULL, &events, (void**)&source)) >= 0)
 		{
 			if (source != NULL)
 			{

@@ -3,6 +3,10 @@ apply from: '../gradle/outputfilename.gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
+    ndkVersion '27.0.11718014'
+
+    namespace 'de.saschawillems.vulkanScenerendering'
+
     defaultConfig {
         applicationId "de.saschawillems.vulkanScenerendering"
         minSdkVersion rootProject.ext.minSdkVersion
