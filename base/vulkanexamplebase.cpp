@@ -7,6 +7,7 @@
 */
 
 #include "vulkanexamplebase.h"
+#include "Log.h"
 
 #if defined(VK_EXAMPLE_XCODE_GENERATED)
 #if (defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT))
@@ -212,6 +213,7 @@ void VulkanExampleBase::prepare()
 	setupRenderPass();
 	createPipelineCache();
 	setupFrameBuffer();
+	setupQueryTimer();
 	settings.overlay = settings.overlay && (!benchmark.active);
 	if (settings.overlay) {
 		ui.device = vulkanDevice;
@@ -767,7 +769,8 @@ void VulkanExampleBase::submitFrame()
 	VK_CHECK_RESULT(vkQueueWaitIdle(queue));
 }
 
-VulkanExampleBase::VulkanExampleBase()
+VulkanExampleBase::VulkanExampleBase() :
+	query_command_buffer_(VK_NULL_HANDLE)
 {
 #if !defined(VK_USE_PLATFORM_ANDROID_KHR)
 	// Check for a valid asset path
@@ -3148,6 +3151,38 @@ void VulkanExampleBase::setupRenderPass()
 void VulkanExampleBase::getEnabledFeatures() {}
 
 void VulkanExampleBase::getEnabledExtensions() {}
+
+void VulkanExampleBase::setupQueryTimer() {
+    // To pay attention:
+    // VkPhysicalDeviceLimits::timestampComputeAndGraphics // must support
+    // VkPhysicalDeviceLimits::timestampPeriod => timestampPeriod is the number of
+    // nanoseconds required for a timestamp query to be incremented by 1.
+
+    // vkCreateQueryPool(); VkQueryPoolCreateInfo::queryType =
+    // VK_QUERY_TYPE_TIMESTAMP
+    VkQueryPoolCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+    createInfo.pNext = nullptr;  // Optional
+    createInfo.flags = 0;        // Reserved for future use, must be 0!
+
+    createInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
+    createInfo.queryCount = 2;  // REVIEW
+    // createInfo.queryCount = mCommandBuffers.size() * 2; // REVIEW
+
+    VkResult result =
+            vkCreateQueryPool(device, &createInfo, nullptr, &query_pool_);
+    if (result == VK_SUCCESS) {
+        ALOGI(
+                "RendererVk::SetupQueryTimer vkCreateQueryPool result SUCCESS: %d "
+                "query_command_buffer_ %p",
+                result, &query_command_buffer_);
+    } else {
+        ALOGI(
+                "RendererVk::SetupQueryTimer vkCreateQueryPool result FAILED: %d "
+                "query_command_buffer_ %p",
+                result, &query_command_buffer_);
+    }
+}
 
 void VulkanExampleBase::windowResize()
 {

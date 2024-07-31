@@ -154,6 +154,9 @@ protected:
 	} semaphores;
 	std::vector<VkFence> waitFences;
 	bool requiresStencil{ false };
+	// GPU_PERF_HINT
+	VkCommandBuffer query_command_buffer_;
+	VkQueryPool query_pool_;
 public:
 	bool prepared = false;
 	bool resized = false;
@@ -384,6 +387,8 @@ public:
 	virtual void getEnabledFeatures();
 	/** @brief (Virtual) Called after the physical device extensions have been read, can be used to enable extensions based on the supported extension listing*/
 	virtual void getEnabledExtensions();
+
+    virtual void setupQueryTimer();
 
 	/** @brief Prepares all Vulkan resources and functions required to run the sample */
 	virtual void prepare();
