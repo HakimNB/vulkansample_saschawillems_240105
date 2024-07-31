@@ -256,11 +256,7 @@ void VulkanExampleBase::nextFrame()
 		viewUpdated = false;
 	}
 
-	startQueryTimer();
-
 	render();
-
-	endQueryTimer();
 
 	frameCounter++;
 	auto tEnd = std::chrono::high_resolution_clock::now();
@@ -299,8 +295,6 @@ void VulkanExampleBase::nextFrame()
 		lastTimestamp = tEnd; // ADPF: CPU timestamp
 	}
 	tPrevEnd = tEnd;
-
-	retrieveTime();
 
 	updateOverlay();
 }
@@ -386,7 +380,13 @@ void VulkanExampleBase::renderLoop()
 		if (prepared)
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
+			
+			// startQueryTimer();
+			
 			render();
+			
+			// endQueryTimer();
+			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
 			auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
@@ -408,6 +408,8 @@ void VulkanExampleBase::renderLoop()
 				frameCounter = 0;
 				lastTimestamp = tEnd;
 			}
+
+			// retrieveTime();
 
 			updateOverlay();
 
@@ -3185,12 +3187,12 @@ void VulkanExampleBase::setupQueryTimer() {
             vkCreateQueryPool(device, &createInfo, nullptr, &query_pool_);
     if (result == VK_SUCCESS) {
         ALOGI(
-                "RendererVk::SetupQueryTimer vkCreateQueryPool result SUCCESS: %d "
+                "VulkanExampleBase::SetupQueryTimer vkCreateQueryPool result SUCCESS: %d "
                 "query_command_buffer_ %p",
                 result, &query_command_buffer_);
     } else {
         ALOGI(
-                "RendererVk::SetupQueryTimer vkCreateQueryPool result FAILED: %d "
+                "VulkanExampleBase::SetupQueryTimer vkCreateQueryPool result FAILED: %d "
                 "query_command_buffer_ %p",
                 result, &query_command_buffer_);
     }
@@ -3206,6 +3208,8 @@ void VulkanExampleBase::startQueryTimer() {
 		return;
 	}
 
+	ALOGI("VulkanExampleBase::startQueryTimer START");
+
 	// CPU_PERF_HINT
 	cpu_clock_start_ = std::chrono::high_resolution_clock::now();
   	auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -3220,6 +3224,8 @@ void VulkanExampleBase::startQueryTimer() {
 	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
 		query_pool_, 0
 	);
+
+	ALOGI("VulkanExampleBase::startQueryTimer END");
 }
 
 void VulkanExampleBase::endQueryTimer() {
@@ -3232,14 +3238,20 @@ void VulkanExampleBase::endQueryTimer() {
     	return;
   	}
 
+	ALOGI("VulkanExampleBase::endQueryTimer START");
+
   	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
 		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
 		query_pool_, 
 		1
 	);
+
+	ALOGI("VulkanExampleBase::endQueryTimer END");
 }
 
 void VulkanExampleBase::retrieveTime() {
+	ALOGI("VulkanExampleBase::retrieveTime START");
+
 	// vkGetQueryPoolResults(); device, queryPool, queryCount = 2, firstQuery,
   	// pData, dataSize, stride, flags
   	std::array<uint64_t, 2> resultBuffer;
@@ -3269,6 +3281,8 @@ void VulkanExampleBase::retrieveTime() {
  	AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_work_duration, true);
  	AdpfPerfHintMgr::getInstance().reportActualWorkDuration();
  	last_gpu_duration_ = gpu_work_duration;
+
+	ALOGI("VulkanExampleBase::retrieveTime last_gpu_duration = %" PRIu64 "", gpu_work_duration);
 
  	// DisplayManager& display_manager = DisplayManager::GetInstance();
  	// int64_t swapchainInterval = display_manager.GetSwapchainInterval();
