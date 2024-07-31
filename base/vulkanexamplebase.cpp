@@ -8,7 +8,8 @@
 
 #include "vulkanexamplebase.h"
 #include <chrono>
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan_core.h>
 
 #include "Log.h"
 #include "adpf_perfhintmgr.hpp"
@@ -3204,20 +3205,31 @@ void VulkanExampleBase::startQueryTimer() {
                    cpu_clock_start_.time_since_epoch())
                    .count();
   	AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
+
+	// Queries must be reset after each individual use
+	// vkResetQueryPool(vk_.device, query_pool_, 0, 2);
+	vkCmdResetQueryPool(drawCmdBuffers[currentBuffer], query_pool_, 0, 2);
+
+	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+		query_pool_, 0
+	);
 }
 
 void VulkanExampleBase::endQueryTimer() {
-  if ( drawCmdBuffers[currentBuffer] == VK_NULL_HANDLE ) {
-    ALOGE("VulkanExampleBase::endQueryTimer render_command_buffer is NULL");
-    return;
-  }
-  if ( query_pool_ == VK_NULL_HANDLE ) {
-    ALOGE("VulkanExampleBase::endQueryTimer query_pool is NULL");
-    return;
-  }
+  	if ( drawCmdBuffers[currentBuffer] == VK_NULL_HANDLE ) {
+    	ALOGE("VulkanExampleBase::endQueryTimer render_command_buffer is NULL");
+    	return;
+  	}
+  	if ( query_pool_ == VK_NULL_HANDLE ) {
+    	ALOGE("VulkanExampleBase::endQueryTimer query_pool is NULL");
+    	return;
+  	}
 
-//  vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
-//                      VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, query_pool_, 1);
+  	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
+		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+		query_pool_, 
+		1
+	);
 }
 
 void VulkanExampleBase::retrieveTime() {
@@ -3245,15 +3257,15 @@ void VulkanExampleBase::retrieveTime() {
   	AdpfPerfHintMgr::getInstance().setActualCpuDurationNanos(duration_ns);
   	AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(duration_ns);
 
-//  	int64_t gpu_work_duration =
-//    	result == VK_SUCCESS ? (int64_t)duration : last_gpu_duration_;
-//  	AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_work_duration, true);
-//  	AdpfPerfHintMgr::getInstance().reportActualWorkDuration();
-//  	last_gpu_duration_ = gpu_work_duration;
-//
-//  	DisplayManager& display_manager = DisplayManager::GetInstance();
-//  	int64_t swapchainInterval = display_manager.GetSwapchainInterval();
-//  	AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(swapchainInterval);
+ 	int64_t gpu_work_duration =
+   	result == VK_SUCCESS ? (int64_t)duration : last_gpu_duration_;
+ 	AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_work_duration, true);
+ 	AdpfPerfHintMgr::getInstance().reportActualWorkDuration();
+ 	last_gpu_duration_ = gpu_work_duration;
+
+ 	// DisplayManager& display_manager = DisplayManager::GetInstance();
+ 	// int64_t swapchainInterval = display_manager.GetSwapchainInterval();
+ 	// AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(swapchainInterval);
 }
 
 void VulkanExampleBase::windowResize()

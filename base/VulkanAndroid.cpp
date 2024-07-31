@@ -102,6 +102,7 @@ PFN_vkCmdDraw vkCmdDraw;
 PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect;
 PFN_vkCmdDrawIndirect vkCmdDrawIndirect;
 PFN_vkCmdDispatch vkCmdDispatch;
+PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
 PFN_vkDestroyPipeline vkDestroyPipeline;
 PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
 PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
@@ -275,6 +276,7 @@ namespace vks
 			vkCmdDrawIndexedIndirect = reinterpret_cast<PFN_vkCmdDrawIndexedIndirect>(vkGetInstanceProcAddr(instance, "vkCmdDrawIndexedIndirect"));
 			vkCmdDrawIndirect = reinterpret_cast<PFN_vkCmdDrawIndirect>(vkGetInstanceProcAddr(instance, "vkCmdDrawIndirect"));
 			vkCmdDispatch = reinterpret_cast<PFN_vkCmdDispatch>(vkGetInstanceProcAddr(instance, "vkCmdDispatch"));
+			vkCmdWriteTimestamp = reinterpret_cast<PFN_vkCmdWriteTimestamp>(vkGetInstanceProcAddr(instance, "vkCmdWriteTimestamp"));
 
 			vkDestroyPipeline = reinterpret_cast<PFN_vkDestroyPipeline>(vkGetInstanceProcAddr(instance, "vkDestroyPipeline"));
 			vkDestroyPipelineLayout = reinterpret_cast<PFN_vkDestroyPipelineLayout>(vkGetInstanceProcAddr(instance, "vkDestroyPipelineLayout"));;

@@ -158,6 +158,7 @@ protected:
   	std::chrono::time_point<std::chrono::high_resolution_clock> cpu_clock_start_;
 	VkCommandBuffer query_command_buffer_;
 	VkQueryPool query_pool_;
+	int64_t last_gpu_duration_;
 public:
 	bool prepared = false;
 	bool resized = false;
