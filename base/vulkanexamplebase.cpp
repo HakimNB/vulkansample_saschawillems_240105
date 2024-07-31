@@ -256,7 +256,12 @@ void VulkanExampleBase::nextFrame()
 		viewUpdated = false;
 	}
 
+	startQueryTimer();
+
 	render();
+
+	endQueryTimer();
+
 	frameCounter++;
 	auto tEnd = std::chrono::high_resolution_clock::now();
 #if (defined(VK_USE_PLATFORM_IOS_MVK) || defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT)) && !defined(VK_EXAMPLE_XCODE_GENERATED)
@@ -294,6 +299,8 @@ void VulkanExampleBase::nextFrame()
 		lastTimestamp = tEnd; // ADPF: CPU timestamp
 	}
 	tPrevEnd = tEnd;
+
+	retrieveTime();
 
 	updateOverlay();
 }
