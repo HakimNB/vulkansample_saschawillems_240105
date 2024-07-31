@@ -7,7 +7,11 @@
 */
 
 #include "vulkanexamplebase.h"
+#include <chrono>
+#include <vulkan/vulkan.h>
+
 #include "Log.h"
+#include "adpf_perfhintmgr.hpp"
 
 #if defined(VK_EXAMPLE_XCODE_GENERATED)
 #if (defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT))
@@ -3182,6 +3186,74 @@ void VulkanExampleBase::setupQueryTimer() {
                 "query_command_buffer_ %p",
                 result, &query_command_buffer_);
     }
+}
+
+void VulkanExampleBase::startQueryTimer() {
+	if ( drawCmdBuffers[currentBuffer] == VK_NULL_HANDLE ) {
+		ALOGE("VulkanExampleBase::startQueryTimer drawCmdBuffer is NULL");
+		return;
+	}
+	if ( query_pool_ == VK_NULL_HANDLE) {
+		ALOGE("VulkanExampleBase::startQueryTimer query_pol_ is NULL");
+		return;
+	}
+
+	// CPU_PERF_HINT
+	cpu_clock_start_ = std::chrono::high_resolution_clock::now();
+  	auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                   cpu_clock_start_.time_since_epoch())
+                   .count();
+  	AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
+}
+
+void VulkanExampleBase::endQueryTimer() {
+  if ( drawCmdBuffers[currentBuffer] == VK_NULL_HANDLE ) {
+    ALOGE("VulkanExampleBase::endQueryTimer render_command_buffer is NULL");
+    return;
+  }
+  if ( query_pool_ == VK_NULL_HANDLE ) {
+    ALOGE("VulkanExampleBase::endQueryTimer query_pool is NULL");
+    return;
+  }
+
+//  vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
+//                      VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, query_pool_, 1);
+}
+
+void VulkanExampleBase::retrieveTime() {
+	// vkGetQueryPoolResults(); device, queryPool, queryCount = 2, firstQuery,
+  	// pData, dataSize, stride, flags
+  	std::array<uint64_t, 2> resultBuffer;
+  	vkDeviceWaitIdle(device);
+  	VkResult result = vkGetQueryPoolResults(
+    	device, query_pool_, 0, 2, sizeof(uint64_t) * resultBuffer.size(),
+      	resultBuffer.data(), sizeof(uint64_t),
+      	VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT
+	);
+
+  	// based on:
+  	// https://github.com/nxp-imx/gtec-demo-framework/blob/master/DemoApps/Vulkan/GpuTimestamp/source/GpuTimestamp.cpp
+  	const auto duration = resultBuffer[1] - resultBuffer[0];
+
+  	// CPU_PERF_HINT
+  	auto cpu_clock_end = std::chrono::high_resolution_clock::now();
+  	auto cpu_clock_past = cpu_clock_end - cpu_clock_start_;
+  	auto cpu_clock_duration =
+    	std::chrono::duration_cast<std::chrono::nanoseconds>(cpu_clock_past)
+        .count();
+  	int64_t duration_ns = static_cast<int64_t>(cpu_clock_duration);
+  	AdpfPerfHintMgr::getInstance().setActualCpuDurationNanos(duration_ns);
+  	AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(duration_ns);
+
+//  	int64_t gpu_work_duration =
+//    	result == VK_SUCCESS ? (int64_t)duration : last_gpu_duration_;
+//  	AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_work_duration, true);
+//  	AdpfPerfHintMgr::getInstance().reportActualWorkDuration();
+//  	last_gpu_duration_ = gpu_work_duration;
+//
+//  	DisplayManager& display_manager = DisplayManager::GetInstance();
+//  	int64_t swapchainInterval = display_manager.GetSwapchainInterval();
+//  	AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(swapchainInterval);
 }
 
 void VulkanExampleBase::windowResize()

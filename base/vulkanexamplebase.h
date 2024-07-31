@@ -155,6 +155,7 @@ protected:
 	std::vector<VkFence> waitFences;
 	bool requiresStencil{ false };
 	// GPU_PERF_HINT
+  	std::chrono::time_point<std::chrono::high_resolution_clock> cpu_clock_start_;
 	VkCommandBuffer query_command_buffer_;
 	VkQueryPool query_pool_;
 public:
@@ -389,6 +390,9 @@ public:
 	virtual void getEnabledExtensions();
 
     virtual void setupQueryTimer();
+	virtual void startQueryTimer();
+	virtual void endQueryTimer();
+	virtual void retrieveTime();
 
 	/** @brief Prepares all Vulkan resources and functions required to run the sample */
 	virtual void prepare();
