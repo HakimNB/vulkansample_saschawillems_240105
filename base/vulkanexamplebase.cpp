@@ -381,11 +381,11 @@ void VulkanExampleBase::renderLoop()
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
 			
-			// startQueryTimer();
+			startQueryTimer();
 			
 			render();
 			
-			// endQueryTimer();
+			endQueryTimer();
 			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
@@ -409,7 +409,7 @@ void VulkanExampleBase::renderLoop()
 				lastTimestamp = tEnd;
 			}
 
-			// retrieveTime();
+			retrieveTime();
 
 			updateOverlay();
 
@@ -802,9 +802,9 @@ VulkanExampleBase::VulkanExampleBase() :
 #endif
 
 	// Validation for all samples can be forced at compile time using the FORCE_VALIDATION define
-#if defined(FORCE_VALIDATION)
+// #if defined(FORCE_VALIDATION)
 	settings.validation = true;
-#endif
+// #endif
 
 	// Command line arguments
 	commandLineParser.add("help", { "--help" }, 0, "Show help");
