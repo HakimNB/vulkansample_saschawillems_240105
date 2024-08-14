@@ -8,6 +8,7 @@
  * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
  */
 
+#include "adpf_perfhintmgr.hpp"
 #if (defined(VK_USE_PLATFORM_IOS_MVK) || defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT))
 // SRS - Enable beta extensions and make VK_KHR_portability_subset visible
 #define VK_ENABLE_BETA_EXTENSIONS
@@ -40,6 +41,8 @@ namespace vks
 		assert(queueFamilyCount > 0);
 		queueFamilyProperties.resize(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilyProperties.data());
+
+		AdpfPerfHintMgr::getInstance().setGpuTimestampPeriod(properties.limits.timestampPeriod);
 
 		// Get list of supported extensions
 		uint32_t extCount = 0;

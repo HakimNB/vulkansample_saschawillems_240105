@@ -3265,6 +3265,7 @@ void VulkanExampleBase::retrieveTime() {
   	// based on:
   	// https://github.com/nxp-imx/gtec-demo-framework/blob/master/DemoApps/Vulkan/GpuTimestamp/source/GpuTimestamp.cpp
   	const auto duration = resultBuffer[1] - resultBuffer[0];
+	ALOGI("VulkanExampleBase::retrieveTime resultBuffer[0] = %ld resultBuffer[1] = %ld", resultBuffer[0], resultBuffer[1]);
 
   	// CPU_PERF_HINT
   	auto cpu_clock_end = std::chrono::high_resolution_clock::now();
