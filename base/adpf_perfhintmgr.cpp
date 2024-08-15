@@ -36,6 +36,18 @@
 //#define VLOGD
 //#endif
 
+bool override_duration = true;
+// shouldn't boost
+// int64_t override_target_work_duration = 33333333L;
+// int64_t override_actual_cpu_duration = 16666667L;
+// int64_t override_actual_gpu_duration = 16666667L;
+// int64_t override_actual_total_duration = 16666667L;
+// should boost
+int64_t override_target_work_duration = 16666667L;
+int64_t override_actual_cpu_duration = 33333333L;
+int64_t override_actual_gpu_duration = 33333333L;
+int64_t override_actual_total_duration = 33333333L;
+
 AdpfPerfHintMgr::AdpfPerfHintMgr()
     : performance_hint_manager_(nullptr),
       performance_hint_session_(nullptr),
@@ -102,6 +114,12 @@ void AdpfPerfHintMgr::setActualCpuDurationNanos(int64_t cpu_duration) {
   if (performance_hint_manager_ != nullptr &&
       performance_hint_session_ != nullptr && work_duration_ != nullptr) {
 #if __ANDROID_API__ >= 35
+    if ( override_duration ) {
+      AWorkDuration_setActualCpuDurationNanos(work_duration_, override_actual_cpu_duration);
+      ALOGI("AdpfPerfHintMgr::setActualCpuDurationNanos OVERRIDE %" PRIu64 "",
+            override_actual_cpu_duration);
+      return;
+    }
     ALOGI("AdpfPerfHintMgr::setActualCpuDurationNanos %" PRIu64 "", cpu_duration);
     AWorkDuration_setActualCpuDurationNanos(work_duration_, cpu_duration);
 #endif
@@ -117,6 +135,12 @@ void AdpfPerfHintMgr::setActualGpuDurationNanos(int64_t gpu_duration,
   if (performance_hint_manager_ != nullptr &&
       performance_hint_session_ != nullptr && work_duration_ != nullptr) {
 #if __ANDROID_API__ >= 35
+    if ( override_duration ) {
+      AWorkDuration_setActualGpuDurationNanos(work_duration_, override_actual_gpu_duration);
+      ALOGI("AdpfPerfHintMgr::setActualGpuDurationNanos OVERRIDE %" PRIu64 "",
+            override_actual_gpu_duration);
+      return;
+    }
     int64_t sent_duration = gpu_duration;
     if (apply_multiplier) {
       sent_duration = gpu_timestamp_period_ * gpu_duration;
@@ -140,6 +164,13 @@ void AdpfPerfHintMgr::setActualTotalDurationNanos(int64_t cpu_duration) {
   if (performance_hint_manager_ != nullptr &&
       performance_hint_session_ != nullptr && work_duration_ != nullptr) {
 #if __ANDROID_API__ >= 35
+    if ( override_duration ) {
+      AWorkDuration_setActualTotalDurationNanos(
+          work_duration_, override_actual_total_duration);
+      ALOGI("AdpfPerfHintMgr::setActualTotalDurationNanos OVERRIDE %" PRIu64 "",
+            override_actual_total_duration);
+      return;
+    }
     ALOGI("AdpfPerfHintMgr::setActualTotalDurationNanos %" PRIu64 "", cpu_duration);
     AWorkDuration_setActualTotalDurationNanos(work_duration_, cpu_duration);
 #endif
@@ -155,6 +186,13 @@ void AdpfPerfHintMgr::updateTargetWorkDuration(int64_t target_work_duration) {
   if (performance_hint_manager_ != nullptr &&
       performance_hint_session_ != nullptr && work_duration_ != nullptr) {
 #if __ANDROID_API__ >= 35
+    if ( override_duration ) {
+      int result = APerformanceHint_updateTargetWorkDuration(
+          performance_hint_session_, override_target_work_duration);
+      ALOGI("AdpfPerfHintMgr::updateTargetWorkDuration OVERRIDE %" PRIu64 " RESULT: %d",
+            override_target_work_duration, result);
+      return;
+    }
     if (target_work_duration_ != target_work_duration) {
       int result = APerformanceHint_updateTargetWorkDuration(
           performance_hint_session_, target_work_duration);

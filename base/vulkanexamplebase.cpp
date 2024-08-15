@@ -3208,7 +3208,7 @@ void VulkanExampleBase::startQueryTimer() {
 		return;
 	}
 
-	ALOGI("VulkanExampleBase::startQueryTimer START");
+	ALOGI("VulkanExampleBase::startQueryTimer START %d", currentBuffer);
 
 	// CPU_PERF_HINT
 	cpu_clock_start_ = std::chrono::high_resolution_clock::now();
@@ -3238,7 +3238,7 @@ void VulkanExampleBase::endQueryTimer() {
     	return;
   	}
 
-	ALOGI("VulkanExampleBase::endQueryTimer START");
+	ALOGI("VulkanExampleBase::endQueryTimer START %d", currentBuffer);
 
   	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
 		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
@@ -3265,7 +3265,11 @@ void VulkanExampleBase::retrieveTime() {
   	// based on:
   	// https://github.com/nxp-imx/gtec-demo-framework/blob/master/DemoApps/Vulkan/GpuTimestamp/source/GpuTimestamp.cpp
   	const auto duration = resultBuffer[1] - resultBuffer[0];
-	ALOGI("VulkanExampleBase::retrieveTime resultBuffer[0] = %ld resultBuffer[1] = %ld", resultBuffer[0], resultBuffer[1]);
+	ALOGI("VulkanExampleBase::retrieveTime result %d resultBuffer[0] = %ld resultBuffer[1] = %ld", result, resultBuffer[0], resultBuffer[1]);
+	// VulkanExampleBase::retrieveTime resultBuffer[0] = 2920011232743 resultBuffer[1] = 4650603143379301016
+	// AGDKTunnel
+	// RendererVk::retrieveTime resultBuffer[0] = 4761127458662 resultBuffer[1] = 4761127480129
+	// AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: 1 gpu_duration: 22261 gpu_timestamp_period_: 40.690105 sent_duration 905802
 
   	// CPU_PERF_HINT
   	auto cpu_clock_end = std::chrono::high_resolution_clock::now();
@@ -3287,7 +3291,7 @@ void VulkanExampleBase::retrieveTime() {
 
  	// DisplayManager& display_manager = DisplayManager::GetInstance();
  	// int64_t swapchainInterval = display_manager.GetSwapchainInterval();
- 	// AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(swapchainInterval);
+ 	AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(33333333L);
 }
 
 void VulkanExampleBase::windowResize()
