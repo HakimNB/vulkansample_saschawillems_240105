@@ -11,9 +11,11 @@ import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 
+import com.google.androidgamesdk.GameActivity;
+
 import java.util.concurrent.Semaphore;
 
-public class VulkanActivity extends NativeActivity {
+public class VulkanActivity extends GameActivity {
 
     static {
         // Load native library
@@ -28,31 +30,31 @@ public class VulkanActivity extends NativeActivity {
 
     private final Semaphore semaphore = new Semaphore(0, true);
 
-    public void showAlert(final String message)
-    {
-        final VulkanActivity activity = this;
+    // public void showAlert(final String message)
+    // {
+    //     final VulkanActivity activity = this;
 
-        ApplicationInfo applicationInfo = activity.getApplicationInfo();
-        final String applicationName = applicationInfo.nonLocalizedLabel.toString();
+    //     ApplicationInfo applicationInfo = activity.getApplicationInfo();
+    //     final String applicationName = applicationInfo.nonLocalizedLabel.toString();
 
-        this.runOnUiThread(new Runnable() {
-           public void run() {
-               AlertDialog.Builder builder = new AlertDialog.Builder(activity, android.R.style.Theme_Material_Dialog_Alert);
-               builder.setTitle(applicationName);
-               builder.setMessage(message);
-               builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       semaphore.release();
-                   }
-               });
-               builder.setCancelable(false);
-               AlertDialog dialog = builder.create();
-               dialog.show();
-           }
-        });
-        try {
-            semaphore.acquire();
-        }
-        catch (InterruptedException e) { }
-    }
+    //     this.runOnUiThread(new Runnable() {
+    //        public void run() {
+    //            AlertDialog.Builder builder = new AlertDialog.Builder(activity, android.R.style.Theme_Material_Dialog_Alert);
+    //            builder.setTitle(applicationName);
+    //            builder.setMessage(message);
+    //            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+    //                public void onClick(DialogInterface dialog, int id) {
+    //                    semaphore.release();
+    //                }
+    //            });
+    //            builder.setCancelable(false);
+    //            AlertDialog dialog = builder.create();
+    //            dialog.show();
+    //        }
+    //     });
+    //     try {
+    //         semaphore.acquire();
+    //     }
+    //     catch (InterruptedException e) { }
+    // }
 }
