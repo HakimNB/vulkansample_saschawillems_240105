@@ -14,12 +14,19 @@ file(GLOB EXAMPLE_SRC "${SRC_DIR}/*.cpp")
 
 add_library(native-lib SHARED ${EXAMPLE_SRC})
 
-add_library(native-app-glue STATIC ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
+# add_library(native-app-glue STATIC ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
 
 add_subdirectory(../base ${CMAKE_SOURCE_DIR}/../base)
 
 find_package(games-frame-pacing REQUIRED CONFIG)
 find_package(game-activity REQUIRED CONFIG)
+
+# Export GameActivity_onCreate(),
+# Refer to: https://github.com/android-ndk/ndk/issues/381.
+set(CMAKE_SHARED_LINKER_FLAGS
+        "${CMAKE_SHARED_LINKER_FLAGS} -u GameActivity_onCreate")
+set(CMAKE_SHARED_LINKER_FLAGS
+      "${CMAKE_SHARED_LINKER_FLAGS} -u Java_com_google_androidgamesdk_GameActivity_initializeNativeCode")
 
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
@@ -34,7 +41,7 @@ target_link_libraries(
     native-lib
     games-frame-pacing::swappy_static
     game-activity::game-activity_static
-    native-app-glue
+#    native-app-glue
     libbase
     android
     log
