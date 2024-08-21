@@ -23,12 +23,12 @@ find_package(game-activity REQUIRED CONFIG)
 
 # Export GameActivity_onCreate(),
 # Refer to: https://github.com/android-ndk/ndk/issues/381.
-set(CMAKE_SHARED_LINKER_FLAGS
-        "${CMAKE_SHARED_LINKER_FLAGS} -u GameActivity_onCreate")
+#set(CMAKE_SHARED_LINKER_FLAGS
+#        "${CMAKE_SHARED_LINKER_FLAGS} -u GameActivity_onCreate")
 set(CMAKE_SHARED_LINKER_FLAGS
       "${CMAKE_SHARED_LINKER_FLAGS} -u Java_com_google_androidgamesdk_GameActivity_initializeNativeCode")
 
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
+#set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
 include_directories(${BASE_DIR})
 include_directories(${EXTERNAL_DIR})
