@@ -38,15 +38,15 @@
 
 bool override_duration = true;
 // shouldn't boost
-int64_t override_target_work_duration = 33333333L;
-int64_t override_actual_cpu_duration = 16666667L;
-int64_t override_actual_gpu_duration = 16666667L;
-int64_t override_actual_total_duration = 16666667L;
+// int64_t override_target_work_duration = 33333333L;
+// int64_t override_actual_cpu_duration = 16666667L;
+// int64_t override_actual_gpu_duration = 16666667L;
+// int64_t override_actual_total_duration = 16666667L;
 // should boost
-// int64_t override_target_work_duration = 16666667L;
-// int64_t override_actual_cpu_duration = 33333333L;
-// int64_t override_actual_gpu_duration = 33333333L;
-// int64_t override_actual_total_duration = 33333333L;
+int64_t override_target_work_duration = 16666667L;
+int64_t override_actual_cpu_duration = 33333333L;
+int64_t override_actual_gpu_duration = 33333333L;
+int64_t override_actual_total_duration = 33333333L;
 
 AdpfPerfHintMgr::AdpfPerfHintMgr()
     : performance_hint_manager_(nullptr),

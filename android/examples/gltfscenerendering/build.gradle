@@ -8,7 +8,7 @@ android {
     namespace 'de.saschawillems.vulkanScenerendering'
 
     defaultConfig {
-        applicationId "de.saschawillems.vulkanScenerendering.adpf_no_boost"
+        applicationId "de.saschawillems.vulkanScenerendering.adpf_boost"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

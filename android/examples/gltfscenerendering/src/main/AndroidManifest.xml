@@ -3,7 +3,7 @@
     package="de.saschawillems.vulkanScenerendering">
 
     <application
-        android:label="ADPF No Boost"
+        android:label="ADPF Boost"
         android:icon="@drawable/icon"
         android:appCategory="game"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
