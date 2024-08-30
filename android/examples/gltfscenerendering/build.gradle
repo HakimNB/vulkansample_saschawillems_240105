@@ -67,6 +67,15 @@ dependencies {
     // Google Play Games for PC Input SDK
     // implementation 'com.google.android.libraries.play.games:inputmapping:1.1.0-beta'
 
+    // To use the Games Activity library
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
+    implementation "androidx.core:core:1.5.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    implementation 'androidx.fragment:fragment:1.2.5'
+    implementation "androidx.games:games-activity:2.0.2"
+
     // Example of using local .aar files in libs/ directory.
     // Comment out the androidx.games implementation lines if
     // you use a local lib.

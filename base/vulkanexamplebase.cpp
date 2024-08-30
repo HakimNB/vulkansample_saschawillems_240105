@@ -372,7 +372,7 @@ void VulkanExampleBase::renderLoop()
 		// Exit loop, example will be destroyed in application main
 		if (destroy)
 		{
-			ANativeActivity_finish(androidApp->activity);
+	// NCT_COMMENT		ANativeActivity_finish(androidApp->activity);
 			break;
 		}
 
