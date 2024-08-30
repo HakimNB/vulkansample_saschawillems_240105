@@ -15,6 +15,7 @@
 #endif
 #include <VulkanDevice.h>
 #include <unordered_set>
+#include "swappy/swappyVk.h"
 
 namespace vks
 {	
@@ -45,19 +46,35 @@ namespace vks
 		AdpfPerfHintMgr::getInstance().setGpuTimestampPeriod(properties.limits.timestampPeriod);
 
 		// Get list of supported extensions
-		uint32_t extCount = 0;
-		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extCount, nullptr);
-		if (extCount > 0)
-		{
-			std::vector<VkExtensionProperties> extensions(extCount);
-			if (vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extCount, &extensions.front()) == VK_SUCCESS)
-			{
-				for (auto& ext : extensions)
-				{
-					supportedExtensions.push_back(ext.extensionName);
-				}
-			}
-		}
+		uint32_t extension_count = 0;
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extension_count, nullptr);
+		// if (extension_count > 0)
+		// {
+		// 	std::vector<VkExtensionProperties> extensions(extension_count);
+		// 	if (vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extension_count, &extensions.front()) == VK_SUCCESS)
+		// 	{
+		// 		for (auto& ext : extensions)
+		// 		{
+		// 			supportedExtensions.push_back(ext.extensionName);
+		// 		}
+		// 	}
+		// }
+
+		// SWAPPY: Add any available extensions Swappy wants
+		std::vector<VkExtensionProperties> available_extensions(extension_count);
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extension_count,
+											available_extensions.data());
+
+		// Add any available extensions Swappy wants
+		uint32_t swappy_extension_count = 0;
+		SwappyVk_determineDeviceExtensions(physicalDevice, extension_count, available_extensions.data(),
+											&swappy_extension_count, nullptr);
+
+		std::vector<const char *> device_extensions;
+
+		// Swappy expects valid string buffers for its extension names, rather than just copying
+  		// pointers to its constants. Make a buffer for it to strcpy into
+		
 	}
 
 	/** 

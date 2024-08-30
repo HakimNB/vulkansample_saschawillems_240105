@@ -5,6 +5,7 @@ find_package(games-frame-pacing REQUIRED CONFIG)
 find_package(game-activity REQUIRED CONFIG)
 
 get_target_property(game-activity-include game-activity::game-activity INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(games-frame-pacing-include games-frame-pacing::swappy INTERFACE_INCLUDE_DIRECTORIES)
 
 # Export GameActivity_onCreate(),
 # Refer to: https://github.com/android-ndk/ndk/issues/381.
