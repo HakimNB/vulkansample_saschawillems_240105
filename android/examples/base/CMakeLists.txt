@@ -34,6 +34,7 @@ set_property(TARGET libktx PROPERTY FOLDER "external")
 
 target_link_libraries(
 	libbase
+	games-frame-pacing::swappy_static
 	android
 	log
 	z
