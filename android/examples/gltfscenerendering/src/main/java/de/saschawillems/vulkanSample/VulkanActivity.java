@@ -11,11 +11,9 @@ import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 
-import com.google.androidgamesdk.GameActivity;
-
 import java.util.concurrent.Semaphore;
 
-public class VulkanActivity extends GameActivity {
+public class VulkanActivity extends NativeActivity {
 
     static {
         // Load native library

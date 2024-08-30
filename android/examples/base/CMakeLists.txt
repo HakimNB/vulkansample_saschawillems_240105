@@ -8,8 +8,7 @@ include_directories(../../../external/glm)
 include_directories(../../../external/gli)
 include_directories(../../../external/imgui)
 include_directories(${EXTERNAL_DIR}/tinygltf)
-#include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
-include_directories(${game-activity-include})
+include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
 
 set(KTX_DIR ../../../external/ktx)
 set(KTX_SOURCES
