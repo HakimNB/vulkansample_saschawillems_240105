@@ -19,6 +19,9 @@
 
 namespace vks
 {	
+	// This is a bit of a hack because of how swappy reports extensions
+	static char *swappy_extension_strings = nullptr;
+
 	/**
 	* Default constructor
 	*
@@ -73,7 +76,36 @@ namespace vks
 		std::vector<const char *> device_extensions;
 
 		// Swappy expects valid string buffers for its extension names, rather than just copying
-  		// pointers to its constants. Make a buffer for it to strcpy into
+		// pointers to its constants. Make a buffer for it to strcpy into
+		const size_t swappy_string_size = VK_MAX_EXTENSION_NAME_SIZE * swappy_extension_count;
+		if (swappy_extension_count > 0) {
+			if (swappy_extension_strings != nullptr) {
+			free(swappy_extension_strings);
+			}
+			swappy_extension_strings = (char *) malloc(swappy_string_size);
+			memset(swappy_extension_strings, 0, swappy_string_size);
+		}
+		char *base = swappy_extension_strings;
+		for (uint32_t i = 0; i < swappy_extension_count; ++i) {
+			device_extensions.push_back(base);
+			base += VK_MAX_EXTENSION_NAME_SIZE;
+		}
+
+		SwappyVk_determineDeviceExtensions(physicalDevice, extension_count, available_extensions.data(),
+											&swappy_extension_count,
+											const_cast<char **>(device_extensions.data()));
+
+		device_extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+
+		// If we are on a Vulkan 1.0 device, require the VK_KHR_maintenance1 extension, which is
+		// core from Vulkan 1.1+
+		VkPhysicalDeviceProperties device_properties{};
+		vkGetPhysicalDeviceProperties(physicalDevice, &device_properties);
+		const uint32_t device_major_version = VK_VERSION_MAJOR(device_properties.apiVersion);
+		const uint32_t device_minor_version = VK_VERSION_MINOR(device_properties.apiVersion);
+		if (device_major_version == 1 && device_minor_version == 0) {
+			device_extensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
+		}
 		
 	}
 
@@ -91,6 +123,12 @@ namespace vks
 		if (logicalDevice)
 		{
 			vkDestroyDevice(logicalDevice, nullptr);
+		}
+
+		// Take this opportunity to clean up the swappy string alloc, if it exists
+		if (swappy_extension_strings != nullptr) {
+			free(swappy_extension_strings);
+			swappy_extension_strings = nullptr;
 		}
 	}
 
