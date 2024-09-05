@@ -17,6 +17,8 @@
 #include <unordered_set>
 #include "swappy/swappyVk.h"
 
+#include "Log.h"
+
 namespace vks
 {	
 	// This is a bit of a hack because of how swappy reports extensions
@@ -105,6 +107,14 @@ namespace vks
 		const uint32_t device_minor_version = VK_VERSION_MINOR(device_properties.apiVersion);
 		if (device_major_version == 1 && device_minor_version == 0) {
 			device_extensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
+		}
+
+		for ( int i = 0; i < device_extensions.size(); i++ ) {
+			std::string ext(device_extensions[i]);
+			supportedExtensions.push_back(ext);
+			ALOGI("VulkanDevice::VulkanDevice supportedExtensions: %s", ext.c_str());
+			//2024-09-05 11:51:07.844 13472-13520 ADPF                    de....awillems.vulkanScenerendering  I  VulkanDevice::VulkanDevice supportedExtensions: VK_GOOGLE_display_timing
+			//2024-09-05 11:51:07.844 13472-13520 ADPF                    de....awillems.vulkanScenerendering  I  VulkanDevice::VulkanDevice supportedExtensions: VK_KHR_swapchain
 		}
 		
 	}
