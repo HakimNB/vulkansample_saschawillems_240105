@@ -170,6 +170,11 @@ public:
 	vks::UIOverlay ui;
 	CommandLineParser commandLineParser;
 
+	void *and_app;
+	void *activity_obj;
+	void *jni_env;
+	void initAndroidObjects(void *app);
+
 	/** @brief Last frame time measured using a high performance timer (if available) */
 	float frameTimer = 1.0f;
 

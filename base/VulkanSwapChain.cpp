@@ -10,6 +10,8 @@
 
 #include "VulkanSwapChain.h"
 
+#include "swappy/swappyVk.h"
+
 #include "Log.h"
 
 /** @brief Creates the platform specific surface abstraction of the native platform window used for presentation */	
@@ -424,6 +426,7 @@ VkResult VulkanSwapChain::queuePresent(VkQueue queue, uint32_t imageIndex, VkSem
 		presentInfo.waitSemaphoreCount = 1;
 	}
 	return vkQueuePresentKHR(queue, &presentInfo);
+	// return SwappyVk_queuePresent(queue, &presentInfo);
 }
 
 

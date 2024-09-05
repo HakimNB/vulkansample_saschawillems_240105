@@ -11,6 +11,8 @@
 #include <vulkan/vulkan.hpp>
 #include <vulkan/vulkan_core.h>
 
+#include "swappy/swappyVk.h"
+
 #include "Log.h"
 #include "adpf_perfhintmgr.hpp"
 
@@ -193,6 +195,20 @@ void VulkanExampleBase::createCommandBuffers()
 void VulkanExampleBase::destroyCommandBuffers()
 {
 	vkFreeCommandBuffers(device, cmdPool, static_cast<uint32_t>(drawCmdBuffers.size()), drawCmdBuffers.data());
+}
+
+void VulkanExampleBase::initAndroidObjects(void* app)
+{
+	and_app = app;
+	android_app* androidApp = (android_app*)app;
+	JNIEnv* env;
+	activity_obj = androidApp->activity;
+	if ( 0 != androidApp->activity->vm->AttachCurrentThread(&env, NULL) ) {
+		ALOGI("VulkanExampleBase::initAndroidObjects failed to get JNIEnv");
+	} else {
+		ALOGI("VulkanExampleBase::initAndroidObjects get JNIEnv");
+		jni_env = env;
+	}
 }
 
 std::string VulkanExampleBase::getShadersPath() const
@@ -1080,6 +1096,31 @@ bool VulkanExampleBase::initVulkan()
 
 	// Get a graphics queue from the device
 	vkGetDeviceQueue(device, vulkanDevice->queueFamilyIndices.graphics, 0, &queue);
+
+	uint32_t present_queue_index_ = vulkanDevice->queueFamilyIndices.graphics;
+    uint64_t refresh_duration;
+	ALOGI("VulkanExampleBase::initVulkan present_queue_index_ %d", present_queue_index_);
+	SwappyVk_setQueueFamilyIndex(device, queue, present_queue_index_);
+	uint64_t refresh_rate = 0;
+
+//	JNIEnv *env = (JNIEnv*) jni_env;
+//	bool success = SwappyVk_initAndGetRefreshCycleDuration(
+//			env,
+//			(jobject) activity_obj,
+//			physicalDevice, device, swapChain.swapChain, &refresh_rate
+//	);
+
+    // CRASH
+//    bool success = SwappyVk_initAndGetRefreshCycleDuration(
+//            (JNIEnv*) (jni_env),
+//            (jobject) activity_obj, // JNI DETECTED ERROR IN APPLICATION: JNI ERROR (app bug): jobject is an invalid JNI transition frame reference: 0xb40000726720f650 (use of invalid jobject)
+//            physicalDevice, device, swapChain.swapChain, &refresh_rate
+//    );
+
+//  	bool success = SwappyVk_initAndGetRefreshCycleDuration(
+//      PlatformUtilAndroid::GetMainThreadJNIEnv(),
+//      PlatformUtilAndroid::GetActivityClassObject(),
+//      physical_device, device, swapchain, &refresh_duration);
 
 	// Find a suitable depth and/or stencil format
 	VkBool32 validFormat{ false };

@@ -46,7 +46,8 @@ void android_main(android_app* state)																\
 	state->userData = vulkanExample;																\
 	state->onAppCmd = VulkanExample::handleAppCommand;												\
 	androidApp = state;																				\
-	vks::android::getDeviceConfig();																\
+	vks::android::getDeviceConfig();                                                                \
+	vulkanExample->initAndroidObjects(state);														\
 	vulkanExample->renderLoop();																	\
 	delete(vulkanExample);																			\
 }
