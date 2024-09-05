@@ -10,6 +10,8 @@
 
 #include "VulkanSwapChain.h"
 
+#include "Log.h"
+
 /** @brief Creates the platform specific surface abstraction of the native platform window used for presentation */	
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 void VulkanSwapChain::initSurface(void* platformHandle, void* platformWindow)
@@ -32,6 +34,8 @@ void VulkanSwapChain::initSurface(screen_context_t screen_context, screen_window
 #endif
 {
 	VkResult err = VK_SUCCESS;
+
+	ALOGI("VulkanSwapChain::initSurface");
 
 	// Create the os-specific surface
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
@@ -214,6 +218,8 @@ void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync, bool
 	assert(device);
 	assert(instance);
 
+	ALOGI("VulkanSwapChain::create");
+
 	// Store the current swap chain handle so we can use it later on to ease up recreation
 	VkSwapchainKHR oldSwapchain = swapChain;
 
@@ -252,6 +258,8 @@ void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync, bool
 	// The VK_PRESENT_MODE_FIFO_KHR mode must always be present as per spec
 	// This mode waits for the vertical blank ("v-sync")
 	VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
+
+	ALOGI("VulkanSwapChain::create vsync: %d", vsync);
 
 	// If v-sync is not requested, try to find a mailbox mode
 	// It's the lowest latency non-tearing present mode available

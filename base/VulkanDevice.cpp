@@ -75,6 +75,8 @@ namespace vks
 		SwappyVk_determineDeviceExtensions(physicalDevice, extension_count, available_extensions.data(),
 											&swappy_extension_count, nullptr);
 
+		ALOGI("VulkanDevice::VulkanDevice SwappyVk_determineDeviceExtensions: %d", swappy_extension_count); // 1 // VK_GOOGLE_display_timing
+
 		std::vector<const char *> device_extensions;
 
 		// Swappy expects valid string buffers for its extension names, rather than just copying
@@ -97,7 +99,7 @@ namespace vks
 											&swappy_extension_count,
 											const_cast<char **>(device_extensions.data()));
 
-		device_extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+		device_extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME); // VK_KHR_swapchain
 
 		// If we are on a Vulkan 1.0 device, require the VK_KHR_maintenance1 extension, which is
 		// core from Vulkan 1.1+
@@ -315,7 +317,7 @@ namespace vks
 
 		// Create the logical device representation
 		std::vector<const char*> deviceExtensions(enabledExtensions);
-		if (useSwapChain)
+		if (useSwapChain) // 1
 		{
 			// If the device will be used for presenting to a display via a swapchain we need to request the swapchain extension
 			deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);

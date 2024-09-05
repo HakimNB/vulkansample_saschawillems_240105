@@ -209,6 +209,7 @@ void VulkanExampleBase::createPipelineCache()
 
 void VulkanExampleBase::prepare()
 {
+	ALOGI("VulkanExampleBase::prepare");
 	initSwapchain();
 	createCommandPool();
 	setupSwapChain();
@@ -3388,6 +3389,7 @@ void VulkanExampleBase::windowResized() {}
 
 void VulkanExampleBase::initSwapchain()
 {
+	ALOGI("VulkanExampleBase::initSwapchain");
 #if defined(_WIN32)
 	swapChain.initSurface(windowInstance, window);
 #elif defined(VK_USE_PLATFORM_ANDROID_KHR)
