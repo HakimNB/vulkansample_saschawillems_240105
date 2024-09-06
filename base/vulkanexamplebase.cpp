@@ -203,6 +203,7 @@ void VulkanExampleBase::initAndroidObjects(void* app)
 	android_app* androidApp = (android_app*)app;
 	JNIEnv* env;
 	activity_obj = androidApp->activity->javaGameActivity;
+	native_window = androidApp->window;
 	if ( 0 != androidApp->activity->vm->AttachCurrentThread(&env, NULL) ) {
 		ALOGI("VulkanExampleBase::initAndroidObjects failed to get JNIEnv");
 	} else {
@@ -1097,6 +1098,8 @@ bool VulkanExampleBase::initVulkan()
 	// Get a graphics queue from the device
 	vkGetDeviceQueue(device, vulkanDevice->queueFamilyIndices.graphics, 0, &queue);
 
+	SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
+
 	uint32_t present_queue_index_ = vulkanDevice->queueFamilyIndices.graphics;
     uint64_t refresh_duration;
 	ALOGI("VulkanExampleBase::initVulkan present_queue_index_ %d", present_queue_index_);
@@ -1111,6 +1114,19 @@ bool VulkanExampleBase::initVulkan()
 //	);
 
     // CRASH
+	// 	Starting looper thread
+	// 2024-09-06 12:45:03.421 25792-25875 libc                    de....awillems.vulkanScenerendering  A  Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0 in tid 25875 (Thread-2), pid 25792 (nScenerendering)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A  Cmdline: de.saschawillems.vulkanScenerendering
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A  pid: 25792, tid: 25875, name: Thread-2  >>> de.saschawillems.vulkanScenerendering <<<
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #01 pc 00000000003213e8  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!liblibbase.so (offset 0x9238000) (swappy::SwappyVkGoogleDisplayTiming::doGetRefreshCycleDuration(VkSwapchainKHR_T*, unsigned long*)+64) (BuildId: 63656f1d0133d75e161b12be9474ac1c6963af9f)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #02 pc 0000000000313140  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!liblibbase.so (offset 0x9238000) (SwappyVk_initAndGetRefreshCycleDuration+188) (BuildId: 63656f1d0133d75e161b12be9474ac1c6963af9f)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #03 pc 0000000000277d7c  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!liblibbase.so (offset 0x9238000) (VulkanExampleBase::initVulkan()+1680) (BuildId: 63656f1d0133d75e161b12be9474ac1c6963af9f)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #04 pc 0000000000278b88  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!liblibbase.so (offset 0x9238000) (VulkanExampleBase::handleAppCommand(android_app*, int)+248) (BuildId: 63656f1d0133d75e161b12be9474ac1c6963af9f)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #05 pc 0000000000198dcc  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!libnative-lib.so (offset 0x8e04000) (BuildId: 889077d8e68a6eef404def18d56501bdf12bcab6)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #06 pc 00000000002711ec  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!liblibbase.so (offset 0x9238000) (VulkanExampleBase::renderLoop()+416) (BuildId: 63656f1d0133d75e161b12be9474ac1c6963af9f)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #07 pc 00000000000e0dc8  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!libnative-lib.so (offset 0x8e04000) (android_main+128) (BuildId: 889077d8e68a6eef404def18d56501bdf12bcab6)
+	// 2024-09-06 12:45:03.609 25898-25898 DEBUG                   crash_dump64                         A        #08 pc 0000000000198ca0  /data/app/~~AJ1F039BqoUxHHXhGcITUg==/de.saschawillems.vulkanScenerendering-tlr29Z_nRrT5uy_DJ0sUNg==/base.apk!libnative-lib.so (offset 0x8e04000) (BuildId: 889077d8e68a6eef404def18d56501bdf12bcab6)
+
 	// Starting looper thread
 	// 2024-09-06 12:02:37.162 27981-28019 libc                    de....awillems.vulkanScenerendering  A  Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0 in tid 28019 (Thread-2), pid 27981 (nScenerendering)
 	// 2024-09-06 12:02:37.376 27981-27989 nScenerendering         de....awillems.vulkanScenerendering  I  Compiler allocated 5250KB to compile void android.view.ViewRootImpl.performTraversals()

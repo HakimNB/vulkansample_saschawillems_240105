@@ -170,6 +170,7 @@ public:
 	vks::UIOverlay ui;
 	CommandLineParser commandLineParser;
 
+	void *native_window;
 	void *and_app;
 	void *activity_obj;
 	void *jni_env;
