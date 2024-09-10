@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <__config>
 #ifdef _WIN32
 #pragma comment(linker, "/subsystem:windows")
 #include <windows.h>
@@ -170,10 +171,10 @@ public:
 	vks::UIOverlay ui;
 	CommandLineParser commandLineParser;
 
-	void *native_window;
-	void *and_app;
-	void *activity_obj;
-	void *jni_env;
+	void *native_window = nullptr;
+	void *and_app = nullptr;
+	void *activity_obj = nullptr;
+	void *jni_env = nullptr;
 	void initAndroidObjects(void *app);
 
 	/** @brief Last frame time measured using a high performance timer (if available) */
@@ -397,7 +398,8 @@ public:
 	/** @brief (Virtual) Called after the physical device extensions have been read, can be used to enable extensions based on the supported extension listing*/
 	virtual void getEnabledExtensions();
 
-    virtual void setupQueryTimer();
+    virtual void setupFramePacing();
+	virtual void setupQueryTimer();
 	virtual void startQueryTimer();
 	virtual void endQueryTimer();
 	virtual void retrieveTime();

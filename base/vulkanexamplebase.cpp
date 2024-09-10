@@ -236,6 +236,7 @@ void VulkanExampleBase::prepare()
 	setupRenderPass();
 	createPipelineCache();
 	setupFrameBuffer();
+	setupFramePacing();
 	setupQueryTimer();
 	settings.overlay = settings.overlay && (!benchmark.active);
 	if (settings.overlay) {
@@ -1106,6 +1107,8 @@ bool VulkanExampleBase::initVulkan()
 	SwappyVk_setQueueFamilyIndex(device, queue, present_queue_index_);
 	uint64_t refresh_rate = 0;
 
+	ALOGI("VulkanExampleBase::initVulkan jni_env: %x activity_obj: %x native_window %x", jni_env, activity_obj, native_window);
+
 //	JNIEnv *env = (JNIEnv*) jni_env;
 //	bool success = SwappyVk_initAndGetRefreshCycleDuration(
 //			env,
@@ -1140,16 +1143,13 @@ bool VulkanExampleBase::initVulkan()
 	// 2024-09-06 12:02:37.383 28040-28040 DEBUG                   crash_dump64                         A        #06 pc 000000000027119c  /data/app/~~odh-9Wm0zqcuKzlNI15YTg==/de.saschawillems.vulkanScenerendering-UQIR1zi1_O3p2P52mZ7Elg==/base.apk!liblibbase.so (offset 0x8e78000) (VulkanExampleBase::renderLoop()+416) (BuildId: 239299f76498475c043baf773be4dfdd0d0a098d)
 	// 2024-09-06 12:02:37.383 28040-28040 DEBUG                   crash_dump64                         A        #07 pc 00000000000e0dc8  /data/app/~~odh-9Wm0zqcuKzlNI15YTg==/de.saschawillems.vulkanScenerendering-UQIR1zi1_O3p2P52mZ7Elg==/base.apk!libnative-lib.so (offset 0x9450000) (android_main+128) (BuildId: 889077d8e68a6eef404def18d56501bdf12bcab6)
 	// 2024-09-06 12:02:37.383 28040-28040 DEBUG                   crash_dump64                         A        #08 pc 0000000000198ca0  /data/app/~~odh-9Wm0zqcuKzlNI15YTg==/de.saschawillems.vulkanScenerendering-UQIR1zi1_O3p2P52mZ7Elg==/base.apk!libnative-lib.so (offset 0x9450000) (BuildId: 889077d8e68a6eef404def18d56501bdf12bcab6)
-    bool success = SwappyVk_initAndGetRefreshCycleDuration(
-            (JNIEnv*) (jni_env),
-            (jobject) activity_obj, // JNI DETECTED ERROR IN APPLICATION: JNI ERROR (app bug): jobject is an invalid JNI transition frame reference: 0xb40000726720f650 (use of invalid jobject)
-            physicalDevice, device, swapChain.swapChain, &refresh_rate
-    );
 
-//  	bool success = SwappyVk_initAndGetRefreshCycleDuration(
-//      PlatformUtilAndroid::GetMainThreadJNIEnv(),
-//      PlatformUtilAndroid::GetActivityClassObject(),
-//      physical_device, device, swapchain, &refresh_duration);
+	// CRASH CULPRIT
+	// bool success = SwappyVk_initAndGetRefreshCycleDuration(
+    //         (JNIEnv*) (jni_env),
+    //         (jobject) activity_obj, // JNI DETECTED ERROR IN APPLICATION: JNI ERROR (app bug): jobject is an invalid JNI transition frame reference: 0xb40000726720f650 (use of invalid jobject)
+    //         physicalDevice, device, swapChain.swapChain, &refresh_rate
+    // );
 
 	// Find a suitable depth and/or stencil format
 	VkBool32 validFormat{ false };
@@ -3236,6 +3236,38 @@ void VulkanExampleBase::setupRenderPass()
 void VulkanExampleBase::getEnabledFeatures() {}
 
 void VulkanExampleBase::getEnabledExtensions() {}
+
+void VulkanExampleBase::setupFramePacing() {
+    uint64_t refresh_rate = 0;
+
+	assert(jni_env);
+	assert(activity_obj);
+	assert(physicalDevice);
+	assert(device);
+	assert(swapChain.swapChain);
+
+	// CRASH CULPRIT
+	// 2024-09-10 15:03:58.521 16414-16478 libc                    de....awillems.vulkanScenerendering  A  Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0 in tid 16478 (Thread-2), pid 16414 (nScenerendering)
+	// 2024-09-10 15:03:59.136 16414-16421 nScenerendering         de....awillems.vulkanScenerendering  I  Compiler allocated 5250KB to compile void android.view.ViewRootImpl.performTraversals()
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A  Cmdline: de.saschawillems.vulkanScenerendering
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A  pid: 16414, tid: 16478, name: Thread-2  >>> de.saschawillems.vulkanScenerendering <<<
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #01 pc 0000000000321564  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (swappy::SwappyVkGoogleDisplayTiming::doGetRefreshCycleDuration(VkSwapchainKHR_T*, unsigned long*)+64) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #02 pc 00000000003132bc  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (SwappyVk_initAndGetRefreshCycleDuration+188) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #03 pc 0000000000279d28  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::setupFramePacing()+68) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #04 pc 000000000026ff88  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::prepare()+176) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #05 pc 00000000000e09b8  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (VulkanExample::prepare()+24) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #06 pc 0000000000278c84  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::handleAppCommand(android_app*, int)+272) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #07 pc 0000000000198e30  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #08 pc 00000000002712e8  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::renderLoop()+416) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #09 pc 00000000000e0e2c  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (android_main+128) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
+	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #10 pc 0000000000198d04  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
+	bool success = SwappyVk_initAndGetRefreshCycleDuration(
+            (JNIEnv*) (jni_env),
+            (jobject) activity_obj, // JNI DETECTED ERROR IN APPLICATION: JNI ERROR (app bug): jobject is an invalid JNI transition frame reference: 0xb40000726720f650 (use of invalid jobject)
+            physicalDevice, device, swapChain.swapChain, &refresh_rate
+    );
+	ALOGI("VulkanExampleBase::setupFramePacing result: %d", success);
+}
 
 void VulkanExampleBase::setupQueryTimer() {
     // To pay attention:
