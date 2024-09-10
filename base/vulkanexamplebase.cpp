@@ -1147,7 +1147,7 @@ bool VulkanExampleBase::initVulkan()
 	// CRASH CULPRIT
 	// bool success = SwappyVk_initAndGetRefreshCycleDuration(
     //         (JNIEnv*) (jni_env),
-    //         (jobject) activity_obj, // JNI DETECTED ERROR IN APPLICATION: JNI ERROR (app bug): jobject is an invalid JNI transition frame reference: 0xb40000726720f650 (use of invalid jobject)
+    //         (jobject) activity_obj,
     //         physicalDevice, device, swapChain.swapChain, &refresh_rate
     // );
 
@@ -3263,7 +3263,7 @@ void VulkanExampleBase::setupFramePacing() {
 	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #10 pc 0000000000198d04  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
 	bool success = SwappyVk_initAndGetRefreshCycleDuration(
             (JNIEnv*) (jni_env),
-            (jobject) activity_obj, // JNI DETECTED ERROR IN APPLICATION: JNI ERROR (app bug): jobject is an invalid JNI transition frame reference: 0xb40000726720f650 (use of invalid jobject)
+            (jobject) activity_obj,
             physicalDevice, device, swapChain.swapChain, &refresh_rate
     );
 	ALOGI("VulkanExampleBase::setupFramePacing result: %d", success);
