@@ -114,6 +114,7 @@ namespace vks
 		for ( int i = 0; i < device_extensions.size(); i++ ) {
 			std::string ext(device_extensions[i]);
 			supportedExtensions.push_back(ext);
+            swappyExtensions.push_back(ext);
 			ALOGI("VulkanDevice::VulkanDevice supportedExtensions: %s", ext.c_str());
 			//2024-09-05 11:51:07.844 13472-13520 ADPF                    de....awillems.vulkanScenerendering  I  VulkanDevice::VulkanDevice supportedExtensions: VK_GOOGLE_display_timing
 			//2024-09-05 11:51:07.844 13472-13520 ADPF                    de....awillems.vulkanScenerendering  I  VulkanDevice::VulkanDevice supportedExtensions: VK_KHR_swapchain
@@ -347,6 +348,10 @@ namespace vks
 		}
 #endif
 
+        for (const std::string &swappyExtension : swappyExtensions)
+        {
+          deviceExtensions.push_back(swappyExtension.c_str());
+        }
 		if (deviceExtensions.size() > 0)
 		{
 			for (const char* enabledExtension : deviceExtensions)

@@ -1099,7 +1099,7 @@ bool VulkanExampleBase::initVulkan()
 	// Get a graphics queue from the device
 	vkGetDeviceQueue(device, vulkanDevice->queueFamilyIndices.graphics, 0, &queue);
 
-	SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
+    SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
 
 	uint32_t present_queue_index_ = vulkanDevice->queueFamilyIndices.graphics;
     uint64_t refresh_duration;
@@ -1637,6 +1637,7 @@ void VulkanExampleBase::handleAppCommand(android_app * app, int32_t cmd)
 		LOGD("APP_CMD_INIT_WINDOW");
 		if (androidApp->window != NULL)
 		{
+            vulkanExample->native_window = androidApp->window;
 			if (vulkanExample->initVulkan()) {
 				vulkanExample->prepare();
 				assert(vulkanExample->prepared);
