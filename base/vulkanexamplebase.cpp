@@ -3267,7 +3267,11 @@ void VulkanExampleBase::setupFramePacing() {
             (jobject) activity_obj,
             physicalDevice, device, swapChain.swapChain, &refresh_rate
     );
-	ALOGI("VulkanExampleBase::setupFramePacing result: %d", success);
+	ALOGI("VulkanExampleBase::setupFramePacing result: %d refresh_rate: %d", success, refresh_rate); // 8333333
+	if ( success ) {
+		SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
+    	SwappyVk_setSwapIntervalNS(device, swapChain.swapChain, refresh_rate);
+	}
 }
 
 void VulkanExampleBase::setupQueryTimer() {

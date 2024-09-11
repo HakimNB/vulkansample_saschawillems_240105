@@ -425,8 +425,8 @@ VkResult VulkanSwapChain::queuePresent(VkQueue queue, uint32_t imageIndex, VkSem
 		presentInfo.pWaitSemaphores = &waitSemaphore;
 		presentInfo.waitSemaphoreCount = 1;
 	}
-	return vkQueuePresentKHR(queue, &presentInfo);
-	// return SwappyVk_queuePresent(queue, &presentInfo);
+	// return vkQueuePresentKHR(queue, &presentInfo);
+	return SwappyVk_queuePresent(queue, &presentInfo);
 }
 
 
