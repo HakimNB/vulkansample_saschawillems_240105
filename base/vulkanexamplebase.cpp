@@ -239,7 +239,7 @@ void VulkanExampleBase::prepare()
 	createPipelineCache();
 	setupFrameBuffer();
 	setupFramePacing();
-// NCT_COMMENT	setupQueryTimer();
+	setupQueryTimer();
 	settings.overlay = settings.overlay && (!benchmark.active);
 	if (settings.overlay) {
 		ui.device = vulkanDevice;
@@ -402,11 +402,11 @@ void VulkanExampleBase::renderLoop()
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
 			
-// NCT_COMMENT			startQueryTimer();
+			startQueryTimer();
 			
 			render();
 			
-// NCT_COMMENT			endQueryTimer();
+			endQueryTimer();
 			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
@@ -823,9 +823,9 @@ VulkanExampleBase::VulkanExampleBase() :
 #endif
 
 	// Validation for all samples can be forced at compile time using the FORCE_VALIDATION define
-#if defined(FORCE_VALIDATION)
+// #if defined(FORCE_VALIDATION)
 	settings.validation = true;
-#endif
+// #endif
 
 	// Command line arguments
 	commandLineParser.add("help", { "--help" }, 0, "Show help");
@@ -3306,13 +3306,11 @@ void VulkanExampleBase::startQueryTimer() {
 	ALOGI("VulkanExampleBase::startQueryTimer START %d", currentBuffer);
 
 	// CPU_PERF_HINT
-#if 0 // NCT_COMMENT
 	cpu_clock_start_ = std::chrono::high_resolution_clock::now();
   	auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(
                    cpu_clock_start_.time_since_epoch())
                    .count();
   	AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
-#endif
 
 	// Queries must be reset after each individual use
 	// vkResetQueryPool(vk_.device, query_pool_, 0, 2);
@@ -3369,7 +3367,6 @@ void VulkanExampleBase::retrieveTime() {
 	// AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: 1 gpu_duration: 22261 gpu_timestamp_period_: 40.690105 sent_duration 905802
 
   	// CPU_PERF_HINT
-#if 0 // NCT_COMMENT
   	auto cpu_clock_end = std::chrono::high_resolution_clock::now();
   	auto cpu_clock_past = cpu_clock_end - cpu_clock_start_;
   	auto cpu_clock_duration =
@@ -3390,7 +3387,6 @@ void VulkanExampleBase::retrieveTime() {
  	// DisplayManager& display_manager = DisplayManager::GetInstance();
  	// int64_t swapchainInterval = display_manager.GetSwapchainInterval();
  	AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(33333333L);
-#endif
 }
 
 void VulkanExampleBase::windowResize()
