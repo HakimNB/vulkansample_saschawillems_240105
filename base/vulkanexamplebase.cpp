@@ -16,6 +16,8 @@
 #include "Log.h"
 #include "adpf_perfhintmgr.hpp"
 
+#define USE_SWAPPY 1
+
 #if defined(VK_EXAMPLE_XCODE_GENERATED)
 #if (defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT))
 #include <Cocoa/Cocoa.h>
@@ -237,7 +239,7 @@ void VulkanExampleBase::prepare()
 	createPipelineCache();
 	setupFrameBuffer();
 	setupFramePacing();
-	setupQueryTimer();
+// NCT_COMMENT	setupQueryTimer();
 	settings.overlay = settings.overlay && (!benchmark.active);
 	if (settings.overlay) {
 		ui.device = vulkanDevice;
@@ -400,11 +402,11 @@ void VulkanExampleBase::renderLoop()
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
 			
-			startQueryTimer();
+// NCT_COMMENT			startQueryTimer();
 			
 			render();
 			
-			endQueryTimer();
+// NCT_COMMENT			endQueryTimer();
 			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
@@ -428,7 +430,7 @@ void VulkanExampleBase::renderLoop()
 				lastTimestamp = tEnd;
 			}
 
-			retrieveTime();
+// NCT_COMMENT			retrieveTime();
 
 			updateOverlay();
 
@@ -821,9 +823,9 @@ VulkanExampleBase::VulkanExampleBase() :
 #endif
 
 	// Validation for all samples can be forced at compile time using the FORCE_VALIDATION define
-// #if defined(FORCE_VALIDATION)
+#if defined(FORCE_VALIDATION)
 	settings.validation = true;
-// #endif
+#endif
 
 	// Command line arguments
 	commandLineParser.add("help", { "--help" }, 0, "Show help");
@@ -1098,14 +1100,6 @@ bool VulkanExampleBase::initVulkan()
 
 	// Get a graphics queue from the device
 	vkGetDeviceQueue(device, vulkanDevice->queueFamilyIndices.graphics, 0, &queue);
-
-    SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
-
-	uint32_t present_queue_index_ = vulkanDevice->queueFamilyIndices.graphics;
-    uint64_t refresh_duration;
-	ALOGI("VulkanExampleBase::initVulkan present_queue_index_ %d", present_queue_index_);
-	SwappyVk_setQueueFamilyIndex(device, queue, present_queue_index_);
-	uint64_t refresh_rate = 0;
 
 	ALOGI("VulkanExampleBase::initVulkan jni_env: %x activity_obj: %x native_window %x", jni_env, activity_obj, native_window);
 
@@ -1637,7 +1631,9 @@ void VulkanExampleBase::handleAppCommand(android_app * app, int32_t cmd)
 		LOGD("APP_CMD_INIT_WINDOW");
 		if (androidApp->window != NULL)
 		{
-            vulkanExample->native_window = androidApp->window;
+//          vulkanExample->destWidth = ANativeWindow_getWidth(androidApp->window);
+//          vulkanExample->destHeight = ANativeWindow_getHeight(androidApp->window);
+          vulkanExample->native_window = androidApp->window;
 			if (vulkanExample->initVulkan()) {
 				vulkanExample->prepare();
 				assert(vulkanExample->prepared);
@@ -3239,6 +3235,7 @@ void VulkanExampleBase::getEnabledFeatures() {}
 void VulkanExampleBase::getEnabledExtensions() {}
 
 void VulkanExampleBase::setupFramePacing() {
+#if defined(USE_SWAPPY)
     uint64_t refresh_rate = 0;
 
 	assert(jni_env);
@@ -3247,27 +3244,21 @@ void VulkanExampleBase::setupFramePacing() {
 	assert(device);
 	assert(swapChain.swapChain);
 
-	// CRASH CULPRIT
-	// 2024-09-10 15:03:58.521 16414-16478 libc                    de....awillems.vulkanScenerendering  A  Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0 in tid 16478 (Thread-2), pid 16414 (nScenerendering)
-	// 2024-09-10 15:03:59.136 16414-16421 nScenerendering         de....awillems.vulkanScenerendering  I  Compiler allocated 5250KB to compile void android.view.ViewRootImpl.performTraversals()
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A  Cmdline: de.saschawillems.vulkanScenerendering
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A  pid: 16414, tid: 16478, name: Thread-2  >>> de.saschawillems.vulkanScenerendering <<<
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #01 pc 0000000000321564  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (swappy::SwappyVkGoogleDisplayTiming::doGetRefreshCycleDuration(VkSwapchainKHR_T*, unsigned long*)+64) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #02 pc 00000000003132bc  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (SwappyVk_initAndGetRefreshCycleDuration+188) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #03 pc 0000000000279d28  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::setupFramePacing()+68) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #04 pc 000000000026ff88  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::prepare()+176) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #05 pc 00000000000e09b8  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (VulkanExample::prepare()+24) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #06 pc 0000000000278c84  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::handleAppCommand(android_app*, int)+272) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #07 pc 0000000000198e30  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #08 pc 00000000002712e8  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!liblibbase.so (offset 0x9028000) (VulkanExampleBase::renderLoop()+416) (BuildId: 00bf3e241ed0955bdd9ffe483219c65248e3f736)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #09 pc 00000000000e0e2c  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (android_main+128) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
-	// 2024-09-10 15:03:59.197 16526-16526 DEBUG                                                        A        #10 pc 0000000000198d04  /data/app/~~_o6vW4dQojfVNAGelbE4mw==/de.saschawillems.vulkanScenerendering-Hz8heW8VTTfp9GtDmR8dRg==/base.apk!libnative-lib.so (offset 0x8dd0000) (BuildId: 60d59e6b3378b914285e7a38e1577875dd7b0f53)
+    uint32_t present_queue_index_ = vulkanDevice->queueFamilyIndices.graphics;
+    ALOGI("VulkanExampleBase::initVulkan present_queue_index_ %d", present_queue_index_);
+    SwappyVk_setQueueFamilyIndex(device, queue, present_queue_index_);
+
 	bool success = SwappyVk_initAndGetRefreshCycleDuration(
             (JNIEnv*) (jni_env),
             (jobject) activity_obj,
             physicalDevice, device, swapChain.swapChain, &refresh_rate
     );
 	ALOGI("VulkanExampleBase::setupFramePacing result: %d", success);
+
+    SwappyVk_setSwapIntervalNS(device, swapChain.swapChain, SWAPPY_SWAP_60FPS);
+    SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
+
+#endif
 }
 
 void VulkanExampleBase::setupQueryTimer() {
@@ -3315,11 +3306,13 @@ void VulkanExampleBase::startQueryTimer() {
 	ALOGI("VulkanExampleBase::startQueryTimer START %d", currentBuffer);
 
 	// CPU_PERF_HINT
+#if 0 // NCT_COMMENT
 	cpu_clock_start_ = std::chrono::high_resolution_clock::now();
   	auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(
                    cpu_clock_start_.time_since_epoch())
                    .count();
   	AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
+#endif
 
 	// Queries must be reset after each individual use
 	// vkResetQueryPool(vk_.device, query_pool_, 0, 2);
@@ -3376,6 +3369,7 @@ void VulkanExampleBase::retrieveTime() {
 	// AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: 1 gpu_duration: 22261 gpu_timestamp_period_: 40.690105 sent_duration 905802
 
   	// CPU_PERF_HINT
+#if 0 // NCT_COMMENT
   	auto cpu_clock_end = std::chrono::high_resolution_clock::now();
   	auto cpu_clock_past = cpu_clock_end - cpu_clock_start_;
   	auto cpu_clock_duration =
@@ -3396,6 +3390,7 @@ void VulkanExampleBase::retrieveTime() {
  	// DisplayManager& display_manager = DisplayManager::GetInstance();
  	// int64_t swapchainInterval = display_manager.GetSwapchainInterval();
  	AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(33333333L);
+#endif
 }
 
 void VulkanExampleBase::windowResize()
@@ -3414,6 +3409,8 @@ void VulkanExampleBase::windowResize()
 	width = destWidth;
 	height = destHeight;
 	setupSwapChain();
+    // Reset swappy to use the new swap chain
+    setupFramePacing();
 
 	// Recreate the frame buffers
 	vkDestroyImageView(device, depthStencil.view, nullptr);

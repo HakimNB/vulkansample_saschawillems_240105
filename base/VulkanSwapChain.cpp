@@ -361,7 +361,8 @@ void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync, bool
 	// If an existing swap chain is re-created, destroy the old swap chain
 	// This also cleans up all the presentable images
 	if (oldSwapchain != VK_NULL_HANDLE) 
-	{ 
+	{
+        SwappyVk_destroySwapchain(device, swapChain);
 		for (uint32_t i = 0; i < imageCount; i++)
 		{
 			vkDestroyImageView(device, buffers[i].view, nullptr);
@@ -425,8 +426,8 @@ VkResult VulkanSwapChain::queuePresent(VkQueue queue, uint32_t imageIndex, VkSem
 		presentInfo.pWaitSemaphores = &waitSemaphore;
 		presentInfo.waitSemaphoreCount = 1;
 	}
-	return vkQueuePresentKHR(queue, &presentInfo);
-	// return SwappyVk_queuePresent(queue, &presentInfo);
+	//return vkQueuePresentKHR(queue, &presentInfo);
+	return SwappyVk_queuePresent(queue, &presentInfo);
 }
 
 
