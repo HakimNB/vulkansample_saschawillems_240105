@@ -237,7 +237,7 @@ void VulkanExampleBase::prepare()
 	createPipelineCache();
 	setupFrameBuffer();
 	setupFramePacing();
-	setupQueryTimer();
+	// setupQueryTimer();
 	settings.overlay = settings.overlay && (!benchmark.active);
 	if (settings.overlay) {
 		ui.device = vulkanDevice;
@@ -400,11 +400,11 @@ void VulkanExampleBase::renderLoop()
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
 			
-			startQueryTimer();
+			// startQueryTimer();
 			
 			render();
 			
-			endQueryTimer();
+			// endQueryTimer();
 			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
@@ -428,7 +428,7 @@ void VulkanExampleBase::renderLoop()
 				lastTimestamp = tEnd;
 			}
 
-			retrieveTime();
+			// retrieveTime();
 
 			updateOverlay();
 
