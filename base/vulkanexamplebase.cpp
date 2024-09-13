@@ -402,11 +402,11 @@ void VulkanExampleBase::renderLoop()
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
 			
-			startQueryTimer();
+			// startQueryTimer();
 			
 			render();
 			
-			endQueryTimer();
+			// endQueryTimer();
 			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
@@ -430,7 +430,7 @@ void VulkanExampleBase::renderLoop()
 				lastTimestamp = tEnd;
 			}
 
-// NCT_COMMENT			retrieveTime();
+			retrieveTime();
 
 			updateOverlay();
 
@@ -3295,7 +3295,7 @@ void VulkanExampleBase::setupQueryTimer() {
     }
 }
 
-void VulkanExampleBase::startQueryTimer() {
+void VulkanExampleBase::startQueryTimer(int index) {
 	if ( drawCmdBuffers[currentBuffer] == VK_NULL_HANDLE ) {
 		ALOGE("VulkanExampleBase::startQueryTimer drawCmdBuffer is NULL");
 		return;
@@ -3316,16 +3316,22 @@ void VulkanExampleBase::startQueryTimer() {
 
 	// Queries must be reset after each individual use
 	// vkResetQueryPool(vk_.device, query_pool_, 0, 2);
-	vkCmdResetQueryPool(drawCmdBuffers[currentBuffer], query_pool_, 0, 2);
+	// vkCmdResetQueryPool(drawCmdBuffers[currentBuffer], query_pool_, 0, 2);
+	
+	vkCmdResetQueryPool(drawCmdBuffers[index], query_pool_, 0, 2);
 
-	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+	// vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+	// 	query_pool_, 0
+	// );
+
+	vkCmdWriteTimestamp(drawCmdBuffers[index], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
 		query_pool_, 0
 	);
 
 	ALOGI("VulkanExampleBase::startQueryTimer END");
 }
 
-void VulkanExampleBase::endQueryTimer() {
+void VulkanExampleBase::endQueryTimer(int index) {
   	if ( drawCmdBuffers[currentBuffer] == VK_NULL_HANDLE ) {
     	ALOGE("VulkanExampleBase::endQueryTimer render_command_buffer is NULL");
     	return;
@@ -3337,11 +3343,11 @@ void VulkanExampleBase::endQueryTimer() {
 
 	ALOGI("VulkanExampleBase::endQueryTimer START %d", currentBuffer);
 
-  	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
-		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
-		query_pool_, 
-		1
-	);
+  	// vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
+	// 	VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+	// 	query_pool_, 
+	// 	1
+	// );
 
 	ALOGI("VulkanExampleBase::endQueryTimer END");
 }

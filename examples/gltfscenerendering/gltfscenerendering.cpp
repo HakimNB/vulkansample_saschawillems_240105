@@ -358,6 +358,9 @@ void VulkanExample::buildCommandBuffers()
 	{
 		renderPassBeginInfo.framebuffer = frameBuffers[i];
 		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));
+
+		startQueryTimer(i);
+
 		vkCmdBeginRenderPass(drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 		vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
 		vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissor);
@@ -370,6 +373,8 @@ void VulkanExample::buildCommandBuffers()
         glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
         glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
         glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
+
+		endQueryTimer(i);
 
 		drawUI(drawCmdBuffers[i]);
 		vkCmdEndRenderPass(drawCmdBuffers[i]);
