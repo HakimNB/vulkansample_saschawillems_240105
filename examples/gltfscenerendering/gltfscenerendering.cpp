@@ -14,6 +14,8 @@
 
 #include "gltfscenerendering.h"
 
+#include "Log.h"
+
 /*
 	Vulkan glTF scene class
 */
@@ -355,6 +357,7 @@ void VulkanExample::buildCommandBuffers()
 	const VkRect2D scissor = vks::initializers::rect2D(width, height, 0, 0);
 
 	int32_t i = 0;
+	ALOGI("VulkanExample::buildCommandBuffers size: %d", drawCmdBuffers.size()); // 6
 	// for (int32_t i = 0; i < drawCmdBuffers.size(); ++i)
 	{
 		renderPassBeginInfo.framebuffer = frameBuffers[i];
