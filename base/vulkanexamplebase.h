@@ -400,8 +400,8 @@ public:
 
     virtual void setupFramePacing();
 	virtual void setupQueryTimer();
-	virtual void startQueryTimer(int index);
-	virtual void endQueryTimer(int index);
+	virtual void startQueryTimer();
+	virtual void endQueryTimer();
 	virtual void retrieveTime();
 
 	/** @brief Prepares all Vulkan resources and functions required to run the sample */
