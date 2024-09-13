@@ -189,6 +189,7 @@ std::string VulkanExampleBase::getWindowTitle()
 void VulkanExampleBase::createCommandBuffers()
 {
 	// Create one command buffer for each swap chain image
+	ALOGI("VulkanExampleBase::createCommandBuffers swapChain.imageCount %d", swapChain.imageCount); // 6
 	drawCmdBuffers.resize(swapChain.imageCount);
 	VkCommandBufferAllocateInfo cmdBufAllocateInfo = vks::initializers::commandBufferAllocateInfo(cmdPool, VK_COMMAND_BUFFER_LEVEL_PRIMARY, static_cast<uint32_t>(drawCmdBuffers.size()));
 	VK_CHECK_RESULT(vkAllocateCommandBuffers(device, &cmdBufAllocateInfo, drawCmdBuffers.data()));
