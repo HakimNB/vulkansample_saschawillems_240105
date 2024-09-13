@@ -402,11 +402,11 @@ void VulkanExampleBase::renderLoop()
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
 			
-			startQueryTimer();
+			// startQueryTimer();
 			
 			render();
 			
-			endQueryTimer();
+			// endQueryTimer();
 			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
@@ -431,6 +431,7 @@ void VulkanExampleBase::renderLoop()
 			}
 
 // NCT_COMMENT			retrieveTime();
+			retrieveTime();
 
 			updateOverlay();
 
@@ -3316,9 +3317,9 @@ void VulkanExampleBase::startQueryTimer() {
 
 	// Queries must be reset after each individual use
 	// vkResetQueryPool(vk_.device, query_pool_, 0, 2);
-	vkCmdResetQueryPool(drawCmdBuffers[currentBuffer], query_pool_, 0, 2);
+	vkCmdResetQueryPool(drawCmdBuffers[0], query_pool_, 0, 2);
 
-	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+	vkCmdWriteTimestamp(drawCmdBuffers[0], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
 		query_pool_, 0
 	);
 
@@ -3337,7 +3338,7 @@ void VulkanExampleBase::endQueryTimer() {
 
 	ALOGI("VulkanExampleBase::endQueryTimer START %d", currentBuffer);
 
-  	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
+  	vkCmdWriteTimestamp(drawCmdBuffers[0],
 		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
 		query_pool_, 
 		1

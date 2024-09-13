@@ -354,10 +354,14 @@ void VulkanExample::buildCommandBuffers()
 	const VkViewport viewport = vks::initializers::viewport((float)width, (float)height, 0.0f, 1.0f);
 	const VkRect2D scissor = vks::initializers::rect2D(width, height, 0, 0);
 
-	for (int32_t i = 0; i < drawCmdBuffers.size(); ++i)
+	int32_t i = 0;
+	// for (int32_t i = 0; i < drawCmdBuffers.size(); ++i)
 	{
 		renderPassBeginInfo.framebuffer = frameBuffers[i];
 		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));
+		
+		startQueryTimer();
+
 		vkCmdBeginRenderPass(drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 		vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
 		vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissor);
@@ -372,6 +376,9 @@ void VulkanExample::buildCommandBuffers()
         glTFScene.draw(drawCmdBuffers[i], pipelineLayout);
 
 		drawUI(drawCmdBuffers[i]);
+
+		endQueryTimer();
+
 		vkCmdEndRenderPass(drawCmdBuffers[i]);
 		VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers[i]));
 	}
