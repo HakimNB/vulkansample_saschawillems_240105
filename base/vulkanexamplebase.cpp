@@ -3262,6 +3262,8 @@ void VulkanExampleBase::setupFramePacing() {
     SwappyVk_setSwapIntervalNS(device, swapChain.swapChain, SWAPPY_SWAP_60FPS);
     SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
 
+	AdpfPerfHintMgr::getInstance().setupQueryTimer();
+
 #endif
 }
 
