@@ -189,6 +189,7 @@ std::string VulkanExampleBase::getWindowTitle()
 void VulkanExampleBase::createCommandBuffers()
 {
 	// Create one command buffer for each swap chain image
+	ALOGI("VulkanExampleBase::createCommandBuffers swapChain.imageCount %d", swapChain.imageCount); // 6
 	drawCmdBuffers.resize(swapChain.imageCount);
 	VkCommandBufferAllocateInfo cmdBufAllocateInfo = vks::initializers::commandBufferAllocateInfo(cmdPool, VK_COMMAND_BUFFER_LEVEL_PRIMARY, static_cast<uint32_t>(drawCmdBuffers.size()));
 	VK_CHECK_RESULT(vkAllocateCommandBuffers(device, &cmdBufAllocateInfo, drawCmdBuffers.data()));
@@ -239,7 +240,7 @@ void VulkanExampleBase::prepare()
 	createPipelineCache();
 	setupFrameBuffer();
 	setupFramePacing();
-// NCT_COMMENT	setupQueryTimer();
+	setupQueryTimer();
 	settings.overlay = settings.overlay && (!benchmark.active);
 	if (settings.overlay) {
 		ui.device = vulkanDevice;
@@ -402,11 +403,11 @@ void VulkanExampleBase::renderLoop()
 		{
 			auto tStart = std::chrono::high_resolution_clock::now();
 			
-// NCT_COMMENT			startQueryTimer();
+			// startQueryTimer();
 			
 			render();
 			
-// NCT_COMMENT			endQueryTimer();
+			// endQueryTimer();
 			
 			frameCounter++;
 			auto tEnd = std::chrono::high_resolution_clock::now();
@@ -431,6 +432,7 @@ void VulkanExampleBase::renderLoop()
 			}
 
 // NCT_COMMENT			retrieveTime();
+			retrieveTime();
 
 			updateOverlay();
 
@@ -775,6 +777,7 @@ void VulkanExampleBase::prepareFrame()
 {
 	// Acquire the next image from the swap chain
 	VkResult result = swapChain.acquireNextImage(semaphores.presentComplete, &currentBuffer);
+	ALOGI("VulkanExampleBase::prepareFrame acquireNextImage result %d", result); // VulkanExampleBase::prepareFrame acquireNextImage result 0
 	// Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE)
 	// SRS - If no longer optimal (VK_SUBOPTIMAL_KHR), wait until submitFrame() in case number of swapchain images will change on resize
 	if ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR)) {
@@ -791,6 +794,7 @@ void VulkanExampleBase::prepareFrame()
 void VulkanExampleBase::submitFrame()
 {
 	VkResult result = swapChain.queuePresent(queue, currentBuffer, semaphores.renderComplete);
+	ALOGI("VulkanExampleBase::submitFrame queuePresent result %d", result); // VulkanExampleBase::submitFrame queuePresent result 1000001003 // VK_SUBOPTIMAL_KHR
 	// Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE) or no longer optimal for presentation (SUBOPTIMAL)
 	if ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR)) {
 		windowResize();
@@ -823,9 +827,9 @@ VulkanExampleBase::VulkanExampleBase() :
 #endif
 
 	// Validation for all samples can be forced at compile time using the FORCE_VALIDATION define
-#if defined(FORCE_VALIDATION)
+// #if defined(FORCE_VALIDATION)
 	settings.validation = true;
-#endif
+// #endif
 
 	// Command line arguments
 	commandLineParser.add("help", { "--help" }, 0, "Show help");
@@ -3258,6 +3262,8 @@ void VulkanExampleBase::setupFramePacing() {
     SwappyVk_setSwapIntervalNS(device, swapChain.swapChain, SWAPPY_SWAP_60FPS);
     SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
 
+	AdpfPerfHintMgr::getInstance().setupQueryTimer();
+
 #endif
 }
 
@@ -3306,19 +3312,17 @@ void VulkanExampleBase::startQueryTimer() {
 	ALOGI("VulkanExampleBase::startQueryTimer START %d", currentBuffer);
 
 	// CPU_PERF_HINT
-#if 0 // NCT_COMMENT
 	cpu_clock_start_ = std::chrono::high_resolution_clock::now();
   	auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(
                    cpu_clock_start_.time_since_epoch())
                    .count();
   	AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
-#endif
 
 	// Queries must be reset after each individual use
 	// vkResetQueryPool(vk_.device, query_pool_, 0, 2);
-	vkCmdResetQueryPool(drawCmdBuffers[currentBuffer], query_pool_, 0, 2);
+	vkCmdResetQueryPool(drawCmdBuffers[0], query_pool_, 0, 2);
 
-	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+	vkCmdWriteTimestamp(drawCmdBuffers[0], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
 		query_pool_, 0
 	);
 
@@ -3337,7 +3341,7 @@ void VulkanExampleBase::endQueryTimer() {
 
 	ALOGI("VulkanExampleBase::endQueryTimer START %d", currentBuffer);
 
-  	vkCmdWriteTimestamp(drawCmdBuffers[currentBuffer],
+  	vkCmdWriteTimestamp(drawCmdBuffers[0],
 		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
 		query_pool_, 
 		1
@@ -3369,7 +3373,6 @@ void VulkanExampleBase::retrieveTime() {
 	// AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: 1 gpu_duration: 22261 gpu_timestamp_period_: 40.690105 sent_duration 905802
 
   	// CPU_PERF_HINT
-#if 0 // NCT_COMMENT
   	auto cpu_clock_end = std::chrono::high_resolution_clock::now();
   	auto cpu_clock_past = cpu_clock_end - cpu_clock_start_;
   	auto cpu_clock_duration =
@@ -3390,7 +3393,6 @@ void VulkanExampleBase::retrieveTime() {
  	// DisplayManager& display_manager = DisplayManager::GetInstance();
  	// int64_t swapchainInterval = display_manager.GetSwapchainInterval();
  	AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(33333333L);
-#endif
 }
 
 void VulkanExampleBase::windowResize()
