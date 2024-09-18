@@ -27,7 +27,7 @@ allprojects {
 
 ext {
     abiFilters = "arm64-v8a"
-    minSdkVersion = 35
+    minSdkVersion = 34
     targetSdkVersion = 35
     compileSdkVersion = 35
     shaderPath = '../../../shaders/'
