@@ -372,6 +372,7 @@ void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync, bool
 	VK_CHECK_RESULT(vkGetSwapchainImagesKHR(device, swapChain, &imageCount, NULL));
 
 	// Get the swap chain images
+	ALOGI("VulkanSwapChain imageCount: %d", imageCount);
 	images.resize(imageCount);
 	VK_CHECK_RESULT(vkGetSwapchainImagesKHR(device, swapChain, &imageCount, images.data()));
 

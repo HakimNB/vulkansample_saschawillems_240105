@@ -3249,7 +3249,7 @@ void VulkanExampleBase::setupFramePacing() {
 	assert(swapChain.swapChain);
 
     uint32_t present_queue_index_ = vulkanDevice->queueFamilyIndices.graphics;
-    ALOGI("VulkanExampleBase::initVulkan present_queue_index_ %d", present_queue_index_);
+    ALOGI("VulkanExampleBase::setupFramePacing present_queue_index_ %d", present_queue_index_);
     SwappyVk_setQueueFamilyIndex(device, queue, present_queue_index_);
 
 	bool success = SwappyVk_initAndGetRefreshCycleDuration(
@@ -3403,6 +3403,7 @@ void VulkanExampleBase::windowResize()
 	}
 	prepared = false;
 	resized = true;
+	ALOGI("VulkanExampleBase::windowResize");
 
 	// Ensure all operations on the device have been finished before destroying resources
 	vkDeviceWaitIdle(device);
