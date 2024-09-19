@@ -796,15 +796,15 @@ void VulkanExampleBase::submitFrame()
 	VkResult result = swapChain.queuePresent(queue, currentBuffer, semaphores.renderComplete);
 	ALOGI("VulkanExampleBase::submitFrame queuePresent result %d", result); // VulkanExampleBase::submitFrame queuePresent result 1000001003 // VK_SUBOPTIMAL_KHR
 	// Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE) or no longer optimal for presentation (SUBOPTIMAL)
-	if ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR)) {
-		windowResize();
-		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			return;
-		}
-	}
-	else {
-		VK_CHECK_RESULT(result);
-	}
+	// if ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR)) {
+	// 	windowResize();
+	// 	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+	// 		return;
+	// 	}
+	// }
+	// else {
+	// 	VK_CHECK_RESULT(result);
+	// }
 	VK_CHECK_RESULT(vkQueueWaitIdle(queue));
 }
 

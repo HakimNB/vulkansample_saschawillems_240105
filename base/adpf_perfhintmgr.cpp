@@ -102,7 +102,7 @@ void AdpfPerfHintMgr::setupQueryTimer() {
 }
 
 void AdpfPerfHintMgr::timerCallback(void* user_data, int64_t cpu_time, int64_t gpu_time) {
-  ALOGI("AdpfPerfHintMgr::timerCallback %x %ld %ld", user_data, cpu_time, gpu_time);
+  ALOGI("AdpfPerfHintMgr::timerCallback %x %ld %ld", user_data, cpu_time, gpu_time); // AdpfPerfHintMgr::timerCallback 0 4001872 43442057
 }
 
 void AdpfPerfHintMgr::setGpuTimestampPeriod(float timestamp_period) {
