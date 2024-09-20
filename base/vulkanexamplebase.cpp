@@ -240,7 +240,7 @@ void VulkanExampleBase::prepare()
 	createPipelineCache();
 	setupFrameBuffer();
 	setupFramePacing();
-	setupQueryTimer();
+	//setupQueryTimer();
 	settings.overlay = settings.overlay && (!benchmark.active);
 	if (settings.overlay) {
 		ui.device = vulkanDevice;
@@ -432,7 +432,6 @@ void VulkanExampleBase::renderLoop()
 			}
 
 // NCT_COMMENT			retrieveTime();
-			retrieveTime();
 
 			updateOverlay();
 
@@ -3263,6 +3262,7 @@ void VulkanExampleBase::setupFramePacing() {
     SwappyVk_setWindow(device, swapChain.swapChain, (ANativeWindow*)native_window);
 
 	AdpfPerfHintMgr::getInstance().setupQueryTimer();
+	AdpfPerfHintMgr::getInstance().updateTargetWorkDuration(SWAPPY_SWAP_60FPS);
 
 #endif
 }

@@ -19,6 +19,7 @@
 #include <inttypes.h>
 #include <sched.h>
 #include <unistd.h>
+#include <chrono>
 
 #include "swappy/swappy_common.h"
 #include "swappy/swappyVk.h"
@@ -103,6 +104,17 @@ void AdpfPerfHintMgr::setupQueryTimer() {
 
 void AdpfPerfHintMgr::timerCallback(void* user_data, int64_t cpu_time, int64_t gpu_time) {
   ALOGI("AdpfPerfHintMgr::timerCallback %x %ld %ld", user_data, cpu_time, gpu_time); // AdpfPerfHintMgr::timerCallback 0 4001872 43442057
+
+  std::chrono::time_point<std::chrono::high_resolution_clock> clock_start = std::chrono::high_resolution_clock::now();
+  auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                  clock_start.time_since_epoch())
+                  .count();
+  AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
+
+  AdpfPerfHintMgr::getInstance().setActualCpuDurationNanos(cpu_time);
+  AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_time, false);
+  AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(cpu_time + gpu_time);
+  AdpfPerfHintMgr::getInstance().reportActualWorkDuration();
 }
 
 void AdpfPerfHintMgr::setGpuTimestampPeriod(float timestamp_period) {

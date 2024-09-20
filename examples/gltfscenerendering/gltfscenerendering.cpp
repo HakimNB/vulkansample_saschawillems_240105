@@ -363,7 +363,7 @@ void VulkanExample::buildCommandBuffers()
 		renderPassBeginInfo.framebuffer = frameBuffers[i];
 		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));
 		
-		startQueryTimer();
+		// startQueryTimer();
 
 		vkCmdBeginRenderPass(drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 		vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
@@ -380,7 +380,7 @@ void VulkanExample::buildCommandBuffers()
 
 		drawUI(drawCmdBuffers[i]);
 
-		endQueryTimer();
+		// endQueryTimer();
 
 		vkCmdEndRenderPass(drawCmdBuffers[i]);
 		VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers[i]));
