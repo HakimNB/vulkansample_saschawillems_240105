@@ -3,7 +3,7 @@
     package="de.saschawillems.vulkanScenerendering">
 
     <application
-        android:label="Swappy ADPF"
+        android:label="Swappy Force Boost"
         android:icon="@drawable/icon"
         android:appCategory="game"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">

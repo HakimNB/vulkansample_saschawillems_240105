@@ -40,7 +40,7 @@
 //#define VLOGD
 //#endif
 
-bool override_duration = false;
+bool override_duration = true;
 // shouldn't boost
 // int64_t override_target_work_duration = 33333333L;
 // int64_t override_actual_cpu_duration = 16666667L;
