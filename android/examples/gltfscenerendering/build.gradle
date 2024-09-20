@@ -8,7 +8,7 @@ android {
     namespace 'de.saschawillems.vulkanScenerendering'
 
     defaultConfig {
-        applicationId "de.saschawillems.vulkanScenerendering.swappy_adpf_boosted"
+        applicationId "de.saschawillems.vulkanScenerendering.swappy_no_adpf"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
