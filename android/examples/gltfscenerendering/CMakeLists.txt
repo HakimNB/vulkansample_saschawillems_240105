@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1 FATAL_ERROR)
 
 project(gltfscenerendering)
-find_package(games-frame-pacing REQUIRED CONFIG)
+# find_package(games-frame-pacing REQUIRED CONFIG)
 find_package(game-activity REQUIRED CONFIG)
 
 get_target_property(game-activity-include game-activity::game-activity INTERFACE_INCLUDE_DIRECTORIES)
@@ -38,7 +38,6 @@ include_directories(${EXTERNAL_DIR}/tinygltf)
 
 target_link_libraries(
     native-lib
-    games-frame-pacing::swappy_static
     game-activity::game-activity_static
     libbase
     android

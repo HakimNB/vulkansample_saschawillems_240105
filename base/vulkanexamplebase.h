@@ -391,10 +391,10 @@ public:
 	/** @brief (Virtual) Called after the physical device extensions have been read, can be used to enable extensions based on the supported extension listing*/
 	virtual void getEnabledExtensions();
 
-    virtual void setupQueryTimer();
-	virtual void startQueryTimer();
-	virtual void endQueryTimer();
-	virtual void retrieveTime();
+    // virtual void setupQueryTimer();
+	// virtual void startQueryTimer();
+	// virtual void endQueryTimer();
+	// virtual void retrieveTime();
 
 	/** @brief Prepares all Vulkan resources and functions required to run the sample */
 	virtual void prepare();
