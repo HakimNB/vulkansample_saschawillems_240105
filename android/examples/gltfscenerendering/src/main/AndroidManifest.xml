@@ -3,7 +3,7 @@
     package="de.saschawillems.vulkanScenerendering">
 
     <application
-        android:label="Swappy No ADPF"
+        android:label="GLTF 2562c090"
         android:icon="@drawable/icon"
         android:appCategory="game"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
