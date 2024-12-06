@@ -45,7 +45,7 @@ bool override_duration = true;
 // should boost
 int64_t override_target_work_duration = 16666667L;
 int64_t override_actual_cpu_duration = 33333333L;
-int64_t override_actual_gpu_duration = 33333333L;
+//int64_t override_actual_gpu_duration = 33333333L;
 int64_t override_actual_total_duration = 33333333L;
 
 AdpfPerfHintMgr::AdpfPerfHintMgr()
@@ -89,9 +89,9 @@ void AdpfPerfHintMgr::uninitializePerformanceHintManager() {
 }
 
 void AdpfPerfHintMgr::setGpuTimestampPeriod(float timestamp_period) {
-  ALOGI("AdpfPerfHintMgr::setGpuTimestampPeriod: %f", timestamp_period);
-  gpu_timestamp_period_set_ = true;
-  gpu_timestamp_period_ = timestamp_period;
+  // ALOGI("AdpfPerfHintMgr::setGpuTimestampPeriod: %f", timestamp_period);
+  // gpu_timestamp_period_set_ = true;
+  // gpu_timestamp_period_ = timestamp_period;
 }
 
 void AdpfPerfHintMgr::setWorkPeriodStartTimestampNanos(int64_t cpu_timestamp) {
@@ -132,33 +132,33 @@ void AdpfPerfHintMgr::setActualCpuDurationNanos(int64_t cpu_duration) {
 }
 void AdpfPerfHintMgr::setActualGpuDurationNanos(int64_t gpu_duration,
                                         bool apply_multiplier) {
-  if (performance_hint_manager_ != nullptr &&
-      performance_hint_session_ != nullptr && work_duration_ != nullptr) {
-#if __ANDROID_API__ >= 35
-    if ( override_duration ) {
-      AWorkDuration_setActualGpuDurationNanos(work_duration_, override_actual_gpu_duration);
-      ALOGI("AdpfPerfHintMgr::setActualGpuDurationNanos OVERRIDE %" PRIu64 "",
-            override_actual_gpu_duration);
-      return;
-    }
-    int64_t sent_duration = gpu_duration;
-    if (apply_multiplier) {
-      sent_duration = gpu_timestamp_period_ * gpu_duration;
-    }
-    ALOGI(
-        "AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: %d "
-        "gpu_duration: %" PRId64
-        " gpu_timestamp_period_: %f sent_duration %" PRId64 "",
-        gpu_timestamp_period_set_, gpu_duration, gpu_timestamp_period_,
-        sent_duration);
-    AWorkDuration_setActualGpuDurationNanos(work_duration_, sent_duration);
-#endif
-  } else {
-    ALOGI(
-        "AdpfPerfHintMgr::setActualGpuDurationNanos performance_hint_manager_ = %p "
-        "work_duration_ = %p",
-        performance_hint_manager_, work_duration_);
-  }
+//   if (performance_hint_manager_ != nullptr &&
+//       performance_hint_session_ != nullptr && work_duration_ != nullptr) {
+// #if __ANDROID_API__ >= 35
+//     if ( override_duration ) {
+//       AWorkDuration_setActualGpuDurationNanos(work_duration_, override_actual_gpu_duration);
+//       ALOGI("AdpfPerfHintMgr::setActualGpuDurationNanos OVERRIDE %" PRIu64 "",
+//             override_actual_gpu_duration);
+//       return;
+//     }
+//     int64_t sent_duration = gpu_duration;
+//     if (apply_multiplier) {
+//       sent_duration = gpu_timestamp_period_ * gpu_duration;
+//     }
+//     ALOGI(
+//         "AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: %d "
+//         "gpu_duration: %" PRId64
+//         " gpu_timestamp_period_: %f sent_duration %" PRId64 "",
+//         gpu_timestamp_period_set_, gpu_duration, gpu_timestamp_period_,
+//         sent_duration);
+//     AWorkDuration_setActualGpuDurationNanos(work_duration_, sent_duration);
+// #endif
+//   } else {
+//     ALOGI(
+//         "AdpfPerfHintMgr::setActualGpuDurationNanos performance_hint_manager_ = %p "
+//         "work_duration_ = %p",
+//         performance_hint_manager_, work_duration_);
+//   }
 }
 void AdpfPerfHintMgr::setActualTotalDurationNanos(int64_t cpu_duration) {
   if (performance_hint_manager_ != nullptr &&
