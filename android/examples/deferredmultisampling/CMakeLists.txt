@@ -16,6 +16,8 @@ add_library(native-app-glue STATIC ${ANDROID_NDK}/sources/android/native_app_glu
 
 add_subdirectory(../base ${CMAKE_SOURCE_DIR}/../base)
 
+find_package(games-frame-pacing REQUIRED CONFIG)
+
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
 include_directories(${BASE_DIR})
@@ -27,6 +29,7 @@ include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
 
 target_link_libraries(
     native-lib
+    games-frame-pacing::swappy_static
     native-app-glue
     libbase
     android
