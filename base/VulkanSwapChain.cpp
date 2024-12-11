@@ -10,6 +10,10 @@
 
 #include "VulkanSwapChain.h"
 
+ #if defined(__ANDROID__)
+#include "swappy/swappyVk.h"
+ #endif //  #if defined(__ANDROID__)
+
 /** @brief Creates the platform specific surface abstraction of the native platform window used for presentation */	
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 void VulkanSwapChain::initSurface(void* platformHandle, void* platformWindow)
@@ -350,7 +354,12 @@ void VulkanSwapChain::create(uint32_t& width, uint32_t& height, bool vsync, bool
 		for (auto i = 0; i < images.size(); i++) {
 			vkDestroyImageView(device, imageViews[i], nullptr);
 		}
+#if defined(__ANDROID__)
+		SwappyVk_destroySwapchain(device, oldSwapchain);
+		oldSwapchain = VK_NULL_HANDLE;
+#else
 		vkDestroySwapchainKHR(device, oldSwapchain, nullptr);
+#endif //  #if defined(__ANDROID__)
 	}
 	uint32_t imageCount{ 0 };
 	VK_CHECK_RESULT(vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr));
@@ -406,7 +415,11 @@ VkResult VulkanSwapChain::queuePresent(VkQueue queue, uint32_t imageIndex, VkSem
 		presentInfo.pWaitSemaphores = &waitSemaphore;
 		presentInfo.waitSemaphoreCount = 1;
 	}
+#if defined(__ANDROID__)
+	return SwappyVk_queuePresent(queue, &presentInfo);
+#else
 	return vkQueuePresentKHR(queue, &presentInfo);
+#endif // #if defined(__ANDROID__)
 }
 
 
