@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.4.1 FATAL_ERROR)
 
 set(NAME deferredmultisampling)
+project(${NAME})
+find_package(games-frame-pacing REQUIRED CONFIG)
+
+get_target_property(games-frame-pacing-include games-frame-pacing::swappy INTERFACE_INCLUDE_DIRECTORIES)
 
 set(SRC_DIR ../../../examples/${NAME})
 set(BASE_DIR ../../../base)
@@ -27,6 +31,7 @@ include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
 
 target_link_libraries(
     native-lib
+    games-frame-pacing::swappy_static
     native-app-glue
     libbase
     android

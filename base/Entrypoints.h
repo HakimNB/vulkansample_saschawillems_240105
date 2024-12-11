@@ -48,6 +48,7 @@ void android_main(android_app* state)																\
 	state->onInputEvent = VulkanExample::handleAppInput;											\
 	androidApp = state;																				\
 	vks::android::getDeviceConfig();																\
+	vulkanExample->initAndroidObjects(state);														\
 	vulkanExample->renderLoop();																	\
 	delete(vulkanExample);																			\
 }

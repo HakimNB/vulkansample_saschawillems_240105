@@ -1,6 +1,8 @@
 file(GLOB BASE_SRC "*.cpp" "*.hpp" "*.h" "../external/imgui/*.cpp")
 file(GLOB BASE_HEADERS "*.hpp" "*.h")
 
+include_directories(${games-frame-pacing-include})
+
 set(KTX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../external/ktx)
 set(KTX_SOURCES
     ${KTX_DIR}/lib/texture.c
