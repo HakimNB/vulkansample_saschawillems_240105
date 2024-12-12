@@ -50,7 +50,7 @@ void android_main(android_app* state)																\
 	vulkanExample->initAndroidObjects(state);														\
 	vulkanExample->renderLoop();																	\
 	delete(vulkanExample);																			\
-}
+}																									\
 
 #elif defined(_DIRECT2DISPLAY)
 /*
