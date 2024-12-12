@@ -429,7 +429,7 @@ void VulkanExampleBase::renderLoop()
 			bool updateView = false;
 
 			// HandleGameActivityInput
-			handleGameActivityInput();
+			vks::android::handleGameActivityInput();
 
 			// Check touch state (for movement)
 			if (touchDown) {
@@ -1434,11 +1434,6 @@ void VulkanExampleBase::handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 	OnHandleMessage(hWnd, uMsg, wParam, lParam);
 }
 #elif defined(VK_USE_PLATFORM_ANDROID_KHR)
-void VulkanExampleBase::handleGameActivityInput()
-{
-	ALOGI("VulkanExampleBase::handleGameActivityInput");
-}
-
 int32_t VulkanExampleBase::handleAppInput(struct android_app* app, AInputEvent* event)
 {
 	VulkanExampleBase* vulkanExample = reinterpret_cast<VulkanExampleBase*>(app->userData);

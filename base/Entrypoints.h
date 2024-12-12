@@ -40,6 +40,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance
  */
 #define VULKAN_EXAMPLE_MAIN()																		\
 VulkanExample *vulkanExample;																		\
+extern "C" {																						\
 void android_main(android_app* state)																\
 {																									\
 	vulkanExample = new VulkanExample();															\
@@ -50,6 +51,7 @@ void android_main(android_app* state)																\
 	vulkanExample->initAndroidObjects(state);														\
 	vulkanExample->renderLoop();																	\
 	delete(vulkanExample);																			\
+}																									\
 }
 
 #elif defined(_DIRECT2DISPLAY)

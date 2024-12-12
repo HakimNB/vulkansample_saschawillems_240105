@@ -24,8 +24,9 @@
 #if defined(__ANDROID__)
 
 #include <android/log.h>
-//#include <android_native_app_glue.h>
-#include <game-activity/native_app_glue/android_native_app_glue.h>
+// #include <android_native_app_glue.h>
+#include "game-activity/native_app_glue/android_native_app_glue.h"
+#include "game-activity/GameActivity.h"
 #include <android/configuration.h>
 #include <memory>
 #include <string>
@@ -191,6 +192,8 @@ namespace vks
 
 		/** @brief Density of the device screen (in DPI) */
 		extern int32_t screenDensity;
+
+		void handleGameActivityInput();
 
 		bool loadVulkanLibrary();
 		void loadVulkanFunctions(VkInstance instance);

@@ -8,7 +8,7 @@ include_directories(../../../external/glm)
 include_directories(../../../external/gli)
 include_directories(../../../external/imgui)
 include_directories(${EXTERNAL_DIR}/tinygltf)
-include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
+# include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
 include_directories(${game-activity-include})
 include_directories(${games-frame-pacing-include})
 
@@ -36,6 +36,7 @@ set_property(TARGET libktx PROPERTY FOLDER "external")
 target_link_libraries(
 	libbase
 	games-frame-pacing::swappy_static
+	game-activity::game-activity_static
 	android
 	log
 	z

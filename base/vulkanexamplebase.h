@@ -19,7 +19,8 @@
 #include <android/native_activity.h>
 #include <android/asset_manager.h>
 // #include <android_native_app_glue.h>
-#include <game-activity/native_app_glue/android_native_app_glue.h>
+#include "game-activity/native_app_glue/android_native_app_glue.h"
+#include "game-activity/GameActivity.h"
 #include <sys/system_properties.h>
 #include "VulkanAndroid.h"
 #elif defined(VK_USE_PLATFORM_DIRECTFB_EXT)
@@ -306,7 +307,6 @@ public:
 #elif defined(VK_USE_PLATFORM_ANDROID_KHR)
 	static int32_t handleAppInput(struct android_app* app, AInputEvent* event);
 	static void handleAppCommand(android_app* app, int32_t cmd);
-	static void handleGameActivityInput();
 #elif (defined(VK_USE_PLATFORM_IOS_MVK) || defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT))
 	void* setupWindow(void* view);
 	void displayLinkOutputCb();
