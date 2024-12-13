@@ -1438,24 +1438,60 @@ void VulkanExampleBase::processMotionEvent(const void* event)
 {
 	const GameActivityMotionEvent* motionEvent = (GameActivityMotionEvent*) event;
 	if ( motionEvent->source == AINPUT_SOURCE_TOUCHSCREEN && motionEvent->pointerCount > 0 ) {
+		const uint32_t pointerIndex = 0;
+		const GameActivityPointerAxes pointerAxes = motionEvent->pointers[0];
 		const int action = motionEvent->action;
 		const int actionMasked = action & AMOTION_EVENT_ACTION_MASK;
+		const int64_t eventTime = motionEvent->eventTime;
+		const int64_t downTime = motionEvent->downTime;
 		switch (actionMasked ) {
-			case AMOTION_EVENT_ACTION_DOWN:
-			ALOGI("AMOTION_EVENT_ACTION_DOWN");
-			break;
-			case AMOTION_EVENT_ACTION_POINTER_DOWN:
-			ALOGI("AMOTION_EVENT_ACTION_POINTER_DOWN");
-			break;
 			case AMOTION_EVENT_ACTION_UP:
-			ALOGI("AMOTION_EVENT_ACTION_UP");
-			break;
 			case AMOTION_EVENT_ACTION_POINTER_UP:
-			ALOGI("AMOTION_EVENT_ACTION_POINTER_UP");
-			break;
+				lastTapTime = eventTime;
+				touchPos.x = pointerAxes.rawX;
+				touchPos.y = pointerAxes.rawY;
+				touchTimer = 0.0;
+				touchDown = false;
+				camera.keys.up = false;
+
+				// Detect single tap
+				if ( eventTime - downTime <= vks::android::TAP_TIMEOUT) {
+					mouseState.buttons.left = true;
+				}
+				break;
+			case AMOTION_EVENT_ACTION_DOWN:
+			case AMOTION_EVENT_ACTION_POINTER_DOWN:
+				if ( eventTime - lastTapTime <= vks::android::DOUBLE_TAP_TIMEOUT ) {
+					keyPressed(TOUCH_DOUBLE_TAP);
+					touchDown = false;
+				} else {
+					touchDown = true;
+				}
+				touchPos.x = pointerAxes.rawX;
+				touchPos.y = pointerAxes.rawY;
+				mouseState.position.x = pointerAxes.rawX;
+				mouseState.position.y = pointerAxes.rawY;
+				break;
 			case AMOTION_EVENT_ACTION_MOVE:
-			ALOGI("AMOTION_EVENT_ACTION_MOVE");
-			break;
+				bool handled = false;
+				if ( settings.overlay ) {
+					ImGuiIO& io = ImGui::GetIO();
+					handled = io.WantCaptureMouse && ui.visible;
+				}
+				if ( !handled ) {
+					int32_t eventX = pointerAxes.rawX;
+					int32_t eventY = pointerAxes.rawY;
+
+					float deltaX = (float)(touchPos.y - eventY) * camera.rotationSpeed * 0.5f;
+					float deltaY = (float)(touchPos.x - eventX) * camera.rotationSpeed * 0.5f;
+
+					camera.rotate(glm::vec3(deltaX, 0.0f, 0.0f));
+					camera.rotate(glm::vec3(0.0f, -deltaY, 0.0f));
+
+					touchPos.x = eventX;
+					touchPos.y = eventY;
+				}
+				break;
 		}
 	}
 }

@@ -633,7 +633,8 @@ public:
 		// inputBuffer.
 		android_input_buffer *inputBuffer = android_app_swap_input_buffers(androidApp);
 		// Early exit if no events.
-		if (inputBuffer == nullptr) return;
+		if (inputBuffer == nullptr) 
+			return;
 
 		ALOGI("handleGameActivityInput keyEventsCount %lu motionEventsCount: %lu", inputBuffer->keyEventsCount, inputBuffer->motionEventsCount);
 
@@ -658,9 +659,6 @@ public:
 				// 	ALOGI("handleGameActivityInput pointer %d [%f, %f]", i, motionEvent->pointers[i].rawX, motionEvent->pointers[i].rawY);
 				// }
 				processMotionEvent(motionEvent);
-				// Didn't belong to a game controller, process it ourselves if it is a
-				// touch event
-				// _cook_game_activity_motion_event(motionEvent, _cooked_event_callback);
 			}
 			android_app_clear_motion_events(inputBuffer);
 		}
