@@ -153,32 +153,6 @@ namespace vks
 {
 	namespace android
 	{
-		void handleGameActivityInput()
-		{
-			// //ALOGI("VulkanAndroid::handleGameActivityInput");
-			
-			// // Swap input buffers so we don't miss any events while processing
-			// // inputBuffer.
-			// android_input_buffer *inputBuffer = android_app_swap_input_buffers(androidApp);
-			// // Early exit if no events.
-			// if (inputBuffer == nullptr) return;
-
-			// ALOGI("handleGameActivityInput keyEventsCount %lu motionEventsCount: %lu", inputBuffer->keyEventsCount, inputBuffer->motionEventsCount);
-
-			// if (inputBuffer->keyEventsCount != 0) {
-			// 	android_app_clear_key_events(inputBuffer);
-			// }
-			// if (inputBuffer->motionEventsCount != 0) {
-			// 	for (uint64_t i = 0; i < inputBuffer->motionEventsCount; ++i) {
-			// 		GameActivityMotionEvent *motionEvent = &inputBuffer->motionEvents[i];
-			// 		// Didn't belong to a game controller, process it ourselves if it is a
-			// 		// touch event
-			// 		// _cook_game_activity_motion_event(motionEvent, _cooked_event_callback);
-			// 	}
-			// 	android_app_clear_motion_events(inputBuffer);
-			// }
-		}
-
 		// Dynamically load Vulkan library and base function pointers
 		bool loadVulkanLibrary()
 		{

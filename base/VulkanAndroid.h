@@ -192,8 +192,6 @@ namespace vks
 		/** @brief Density of the device screen (in DPI) */
 		extern int32_t screenDensity;
 
-		// void handleGameActivityInput();
-
 		bool loadVulkanLibrary();
 		void loadVulkanFunctions(VkInstance instance);
 		void freeVulkanLibrary();

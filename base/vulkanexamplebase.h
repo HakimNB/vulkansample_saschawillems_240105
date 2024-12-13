@@ -307,6 +307,7 @@ public:
 	static int32_t handleAppInput(struct android_app* app, AInputEvent* event);
 	static void handleAppCommand(android_app* app, int32_t cmd);
 	virtual void handleGameActivityInput();
+	virtual void processMotionEvent(const void* event);
 #elif (defined(VK_USE_PLATFORM_IOS_MVK) || defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT))
 	void* setupWindow(void* view);
 	void displayLinkOutputCb();

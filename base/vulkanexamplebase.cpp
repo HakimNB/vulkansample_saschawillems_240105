@@ -429,7 +429,6 @@ void VulkanExampleBase::renderLoop()
 			bool updateView = false;
 
 			// HandleGameActivityInput
-			// vks::android::handleGameActivityInput();
 			handleGameActivityInput();
 
 			// Check touch state (for movement)
@@ -1435,6 +1434,37 @@ void VulkanExampleBase::handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 	OnHandleMessage(hWnd, uMsg, wParam, lParam);
 }
 #elif defined(VK_USE_PLATFORM_ANDROID_KHR)
+void VulkanExampleBase::processMotionEvent(const void* event)
+{
+	const GameActivityMotionEvent* motionEvent = (GameActivityMotionEvent*) event;
+	if ( motionEvent->source == AINPUT_SOURCE_TOUCHSCREEN && motionEvent->pointerCount > 0 ) {
+		const int action = motionEvent->action;
+		const int actionMasked = action & AMOTION_EVENT_ACTION_MASK;
+		switch (actionMasked ) {
+			case AMOTION_EVENT_ACTION_DOWN:
+			ALOGI("AMOTION_EVENT_ACTION_DOWN");
+			break;
+			case AMOTION_EVENT_ACTION_POINTER_DOWN:
+			ALOGI("AMOTION_EVENT_ACTION_POINTER_DOWN");
+			break;
+			case AMOTION_EVENT_ACTION_UP:
+			ALOGI("AMOTION_EVENT_ACTION_UP");
+			break;
+			case AMOTION_EVENT_ACTION_POINTER_UP:
+			ALOGI("AMOTION_EVENT_ACTION_POINTER_UP");
+			break;
+			case AMOTION_EVENT_ACTION_MOVE:
+			ALOGI("AMOTION_EVENT_ACTION_MOVE");
+			break;
+		}
+	}
+}
+
+/**
+ *	Stub to be implemented by child class
+ *	Actually we can abstract some implementation here, but not sure why there is linker error
+ *	when accessing all the android objects (eg: android_app_swap_input_buffers) here
+ */
 void VulkanExampleBase::handleGameActivityInput() {
 }
 

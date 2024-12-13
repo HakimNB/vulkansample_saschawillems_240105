@@ -638,11 +638,26 @@ public:
 		ALOGI("handleGameActivityInput keyEventsCount %lu motionEventsCount: %lu", inputBuffer->keyEventsCount, inputBuffer->motionEventsCount);
 
 		if (inputBuffer->keyEventsCount != 0) {
+			// TODO: add support for controllers
 			android_app_clear_key_events(inputBuffer);
 		}
+
 		if (inputBuffer->motionEventsCount != 0) {
 			for (uint64_t i = 0; i < inputBuffer->motionEventsCount; ++i) {
 				GameActivityMotionEvent *motionEvent = &inputBuffer->motionEvents[i];
+				// ALOGI("motion action: %d, deviceId: %d eventTime: %ld pointerCount: %d, source: %d, precisionXY: [%f, %f]",
+				// 	motionEvent->action,
+				// 	motionEvent->deviceId,
+				// 	motionEvent->eventTime,
+				// 	motionEvent->pointerCount,
+				// 	motionEvent->source,
+				// 	motionEvent->precisionX,
+				// 	motionEvent->precisionY
+				// );
+				// for ( int i = 0; i < motionEvent->pointerCount; i++ ) {
+				// 	ALOGI("handleGameActivityInput pointer %d [%f, %f]", i, motionEvent->pointers[i].rawX, motionEvent->pointers[i].rawY);
+				// }
+				processMotionEvent(motionEvent);
 				// Didn't belong to a game controller, process it ourselves if it is a
 				// touch event
 				// _cook_game_activity_motion_event(motionEvent, _cooked_event_callback);
