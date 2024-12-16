@@ -39,29 +39,7 @@ android {
 }
 
 dependencies {
-    // implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
-    // implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
-    // implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
-    // implementation "androidx.core:core:1.5.0"
-    // implementation "androidx.constraintlayout:constraintlayout:2.0.4"
-    // implementation 'androidx.fragment:fragment:1.2.5'
-    // implementation 'com.google.oboe:oboe:1.5.0'
     implementation "androidx.games:games-frame-pacing:2.1.2"
-    // implementation "androidx.games:games-performance-tuner:1.5.0"
-    // implementation "androidx.games:games-activity:2.0.2"
-    // implementation "androidx.games:games-controller:2.0.0"
-
-    // // Dependency for using APIs wrapped using library wrapper
-    // implementation 'com.google.android.gms:play-services-gni-native-c:1.0.0-beta2'
-
-    // Google Play Games dependencies
-    // implementation "com.google.android.gms:play-services-games-v2:17.0.0"
-    // // Use the Play Core AAR included with the SDK.
-    // if(PADEnabled.toBoolean()) {
-    //     implementation files("$playcoreDir/playcore.aar")
-    // }
-    // Google Play Games for PC Input SDK
-    // implementation 'com.google.android.libraries.play.games:inputmapping:1.1.0-beta'
 
     // To use the Games Activity library
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
@@ -71,14 +49,6 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
     implementation 'androidx.fragment:fragment:1.2.5'
     implementation "androidx.games:games-activity:2.0.2"
-
-    // Example of using local .aar files in libs/ directory.
-    // Comment out the androidx.games implementation lines if
-    // you use a local lib.
-    //implementation fileTree(dir: 'libs', include: ['GameActivity.aar',
-    //                                               'GameController.aar',
-    //                                               'games-frame-pacing-1.9.0.aar',
-    //                                               'games-performance-tuner-1.5.0.aar'])
 }
 
 task copyTask {
