@@ -8,11 +8,17 @@
 
 #include "vulkanexamplebase.h"
 
-#include "swappy/swappyVk.h"
-
 #include "Log.h"
 
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+
 #define USE_SWAPPY 1
+
+#include "swappy/swappyVk.h"
+
+#include "adpf_perfhintmgr.hpp"
+
+#endif
 
 #if defined(VK_EXAMPLE_XCODE_GENERATED)
 #if (defined(VK_USE_PLATFORM_MACOS_MVK) || defined(VK_USE_PLATFORM_METAL_EXT))
