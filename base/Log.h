@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+ #if defined(__ANDROID__)
+
 #include <android/log.h>
 
 #define LOG_TAG "ADPF"
@@ -26,3 +28,12 @@
 #else
 #define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__);
 #endif
+
+#else // #if defined(__ANDROID__)
+
+#define ALOGE(...)
+#define ALOGW(...)
+#define ALOGI(...)
+#define ALOGV(...)
+
+#endif // #if defined(__ANDROID__)
