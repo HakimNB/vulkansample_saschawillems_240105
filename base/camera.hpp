@@ -25,6 +25,9 @@ private:
 		glm::mat4 rotM = glm::mat4(1.0f);
 		glm::mat4 transM;
 
+		// KIM
+		// rotM = glm::rotate(rotM, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
 		rotM = glm::rotate(rotM, glm::radians(rotation.x * (flipY ? -1.0f : 1.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
 		rotM = glm::rotate(rotM, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		rotM = glm::rotate(rotM, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));

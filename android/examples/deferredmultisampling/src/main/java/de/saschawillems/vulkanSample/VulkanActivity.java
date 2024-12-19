@@ -10,6 +10,7 @@ import android.app.NativeActivity;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.androidgamesdk.GameActivity;
 
@@ -24,6 +25,11 @@ public class VulkanActivity extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("VulkanActivity", "VulkanActivity.onDestroy");
     }
 
     // Use a semaphore to create a modal dialog

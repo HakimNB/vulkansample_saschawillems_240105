@@ -10,6 +10,8 @@
 
 #include "VulkanSwapChain.h"
 
+#include "Log.h"
+
 #include "swappy/swappyVk.h"
 
 /** @brief Creates the platform specific surface abstraction of the native platform window used for presentation */	
@@ -43,6 +45,7 @@ void VulkanSwapChain::initSurface(screen_context_t screen_context, screen_window
 	surfaceCreateInfo.hwnd = (HWND)platformWindow;
 	err = vkCreateWin32SurfaceKHR(instance, &surfaceCreateInfo, nullptr, &surface);
 #elif defined(VK_USE_PLATFORM_ANDROID_KHR)
+	ALOGI("VulkanSwapChain::initSurface window.width: %d, window.height: %d", ANativeWindow_getWidth(window), ANativeWindow_getHeight(window));
 	VkAndroidSurfaceCreateInfoKHR surfaceCreateInfo = {};
 	surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
 	surfaceCreateInfo.window = window;
@@ -231,6 +234,13 @@ void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync, bool
 	std::vector<VkPresentModeKHR> presentModes(presentModeCount);
 	VK_CHECK_RESULT(vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &presentModeCount, presentModes.data()));
 
+	// surfCaps.currentTransform = 2
+	// surfCaps.supportedTransforms = 511
+	ALOGI("VulkanSwapchain::create width: %d, height: %d, surfaceWidth: %d, surfaceHeight: %d currentTransform: %ld supportedTransform: %ld", *width, *height, surfCaps.currentExtent.width, surfCaps.currentExtent.height, surfCaps.currentTransform, surfCaps.supportedTransforms);
+	if ( surfCaps.currentTransform & VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR ) {
+		
+	}
+
 	VkExtent2D swapchainExtent = {};
 	// If width (and height) equals the special value 0xFFFFFFFF, the size of the surface will be set by the swapchain
 	if (surfCaps.currentExtent.width == (uint32_t)-1)
@@ -293,15 +303,16 @@ void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync, bool
 
 	// Find the transformation of the surface
 	VkSurfaceTransformFlagsKHR preTransform;
-	if (surfCaps.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-	{
-		// We prefer a non-rotated transform
-		preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-	}
-	else
-	{
-		preTransform = surfCaps.currentTransform;
-	}
+	// if (surfCaps.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
+	// {
+	// 	// We prefer a non-rotated transform
+	// 	preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+	// }
+	// else
+	// {
+	// 	preTransform = surfCaps.currentTransform;
+	// }
+	preTransform = surfCaps.currentTransform;
 
 	// Find a supported composite alpha format (not all devices support alpha opaque)
 	VkCompositeAlphaFlagBitsKHR compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
@@ -337,6 +348,9 @@ void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync, bool
 	// Setting clipped to VK_TRUE allows the implementation to discard rendering outside of the surface area
 	swapchainCI.clipped = VK_TRUE;
 	swapchainCI.compositeAlpha = compositeAlpha;
+
+	ALOGI("VulkanSwapchain::create width: %d, height: %d surfaceWidth: %d, surfaceHeight: %d swapchainExtent.width: %d swapchainExtent.height: %d", *width, *height, surfCaps.currentExtent.width, surfCaps.currentExtent.height, swapchainExtent.width, swapchainExtent.height);
+	ALOGI("VulkanSwapchain::create VkSwapchainCreateInfoKHR.preTransform: %ld", swapchainCI.preTransform);
 
 	// Enable transfer source on swap chain images if supported
 	if (surfCaps.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) {

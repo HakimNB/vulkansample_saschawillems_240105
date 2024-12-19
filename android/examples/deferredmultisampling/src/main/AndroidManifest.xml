@@ -3,6 +3,7 @@
 
     <application
         android:label="Vulkan deferred multi sampling"
+        android:resizeableActivity="true"
         android:icon="@drawable/icon"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         <activity android:name="de.saschawillems.vulkanSample.VulkanActivity"

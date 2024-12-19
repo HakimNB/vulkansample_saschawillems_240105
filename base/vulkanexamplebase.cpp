@@ -345,6 +345,7 @@ void VulkanExampleBase::renderLoop()
 	}
 #endif
 
+	ALOGI("VulkanExampleBase::renderLoop width: %d, height: %d", width, height); // 1280, 720
 	destWidth = width;
 	destHeight = height;
 	lastTimestamp = std::chrono::high_resolution_clock::now();
@@ -794,15 +795,17 @@ void VulkanExampleBase::submitFrame()
 {
 	VkResult result = swapChain.queuePresent(queue, currentBuffer, semaphores.renderComplete);
 	// Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE) or no longer optimal for presentation (SUBOPTIMAL)
-	// if ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR)) {
-	// 	windowResize();
-	// 	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-	// 		return;
-	// 	}
-	// }
-	// else {
-	// 	VK_CHECK_RESULT(result);
-	// }
+	if ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR)) {
+		ALOGI("VulkanExampleBase::submitFrame result: %d, VK_SUBOPTIMAL_KHR = %d", result, result == VK_SUBOPTIMAL_KHR); // VK_SUBOPTIMAL_KHR
+		windowResize();
+		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+			ALOGI("VulkanExampleBase::submitFrame result: %d == VK_ERROR_OUT_OF_DATE_KHR", result);
+			return;
+		}
+	}
+	else {
+		VK_CHECK_RESULT(result);
+	}
 	VK_CHECK_RESULT(vkQueueWaitIdle(queue));
 }
 
