@@ -108,8 +108,9 @@ void AdpfPerfHintMgr::timerCallback(void* user_data, int64_t cpu_time, int64_t g
   AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
 
   AdpfPerfHintMgr::getInstance().setActualCpuDurationNanos(cpu_time);
-  AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_time, false);
-  AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(cpu_time + gpu_time);
+  // AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_time, false);
+  // AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(cpu_time + gpu_time);
+  AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(cpu_time);
   AdpfPerfHintMgr::getInstance().reportActualWorkDuration();
 }
 
@@ -151,27 +152,27 @@ void AdpfPerfHintMgr::setActualCpuDurationNanos(int64_t cpu_duration) {
 }
 void AdpfPerfHintMgr::setActualGpuDurationNanos(int64_t gpu_duration,
                                         bool apply_multiplier) {
-  if (performance_hint_manager_ != nullptr &&
-      performance_hint_session_ != nullptr && work_duration_ != nullptr) {
-#if __ANDROID_API__ >= 35
-    int64_t sent_duration = gpu_duration;
-    if (apply_multiplier) {
-      sent_duration = gpu_timestamp_period_ * gpu_duration;
-    }
-    ALOGI(
-        "AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: %d "
-        "gpu_duration: %" PRId64
-        " gpu_timestamp_period_: %f sent_duration %" PRId64 "",
-        gpu_timestamp_period_set_, gpu_duration, gpu_timestamp_period_,
-        sent_duration);
-    AWorkDuration_setActualGpuDurationNanos(work_duration_, sent_duration);
-#endif
-  } else {
-    ALOGI(
-        "AdpfPerfHintMgr::setActualGpuDurationNanos performance_hint_manager_ = %p "
-        "work_duration_ = %p",
-        performance_hint_manager_, work_duration_);
-  }
+//   if (performance_hint_manager_ != nullptr &&
+//       performance_hint_session_ != nullptr && work_duration_ != nullptr) {
+// #if __ANDROID_API__ >= 35
+//     int64_t sent_duration = gpu_duration;
+//     if (apply_multiplier) {
+//       sent_duration = gpu_timestamp_period_ * gpu_duration;
+//     }
+//     ALOGI(
+//         "AdpfPerfHintMgr::setActualGpuDurationNanos gpu_timestamp_period_set: %d "
+//         "gpu_duration: %" PRId64
+//         " gpu_timestamp_period_: %f sent_duration %" PRId64 "",
+//         gpu_timestamp_period_set_, gpu_duration, gpu_timestamp_period_,
+//         sent_duration);
+//     AWorkDuration_setActualGpuDurationNanos(work_duration_, sent_duration);
+// #endif
+//   } else {
+//     ALOGI(
+//         "AdpfPerfHintMgr::setActualGpuDurationNanos performance_hint_manager_ = %p "
+//         "work_duration_ = %p",
+//         performance_hint_manager_, work_duration_);
+//   }
 }
 void AdpfPerfHintMgr::setActualTotalDurationNanos(int64_t cpu_duration) {
   if (performance_hint_manager_ != nullptr &&

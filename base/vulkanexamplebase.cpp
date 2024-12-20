@@ -16,7 +16,7 @@
 
 #include "swappy/swappyVk.h"
 
-// #include "adpf_perfhintmgr.hpp"
+#include "adpf_perfhintmgr.hpp"
 
 #endif
 
