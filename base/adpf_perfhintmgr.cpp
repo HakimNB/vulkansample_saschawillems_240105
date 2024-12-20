@@ -107,10 +107,9 @@ void AdpfPerfHintMgr::timerCallback(void* user_data, int64_t cpu_time, int64_t g
                   .count();
   AdpfPerfHintMgr::getInstance().setWorkPeriodStartTimestampNanos(nanos);
 
-  // AdpfPerfHintMgr::getInstance().setActualCpuDurationNanos(cpu_time);
+  AdpfPerfHintMgr::getInstance().setActualCpuDurationNanos(cpu_time);
   AdpfPerfHintMgr::getInstance().setActualGpuDurationNanos(gpu_time, false);
-  // AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(cpu_time + gpu_time);
-  AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(gpu_time);
+  AdpfPerfHintMgr::getInstance().setActualTotalDurationNanos(cpu_time + gpu_time);
   AdpfPerfHintMgr::getInstance().reportActualWorkDuration();
 }
 
@@ -137,18 +136,18 @@ void AdpfPerfHintMgr::setWorkPeriodStartTimestampNanos(int64_t cpu_timestamp) {
   }
 }
 void AdpfPerfHintMgr::setActualCpuDurationNanos(int64_t cpu_duration) {
-//   if (performance_hint_manager_ != nullptr &&
-//       performance_hint_session_ != nullptr && work_duration_ != nullptr) {
-// #if __ANDROID_API__ >= 35
-//     ALOGI("AdpfPerfHintMgr::setActualCpuDurationNanos %" PRIu64 "", cpu_duration);
-//     AWorkDuration_setActualCpuDurationNanos(work_duration_, cpu_duration);
-// #endif
-//   } else {
-//     ALOGI(
-//         "AdpfPerfHintMgr::setActualCpuDurationNanos performance_hint_manager_ = %p "
-//         "work_duration_ = %p",
-//         performance_hint_manager_, work_duration_);
-//   }
+  if (performance_hint_manager_ != nullptr &&
+      performance_hint_session_ != nullptr && work_duration_ != nullptr) {
+#if __ANDROID_API__ >= 35
+    ALOGI("AdpfPerfHintMgr::setActualCpuDurationNanos %" PRIu64 "", cpu_duration);
+    AWorkDuration_setActualCpuDurationNanos(work_duration_, cpu_duration);
+#endif
+  } else {
+    ALOGI(
+        "AdpfPerfHintMgr::setActualCpuDurationNanos performance_hint_manager_ = %p "
+        "work_duration_ = %p",
+        performance_hint_manager_, work_duration_);
+  }
 }
 void AdpfPerfHintMgr::setActualGpuDurationNanos(int64_t gpu_duration,
                                         bool apply_multiplier) {
